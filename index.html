@@ -396,6 +396,26 @@ button:active { opacity: .85; transform: scale(.97); }
 #rejectCall { background: #ef4444; color: #fff; padding: 12px 20px; border-radius: 50px; font-weight: 600; font-size: 13px; }
 #rejectCall:hover { background: #dc2626; }
 
+/* ── Входящий групповой звонок ── */
+#incomingGroupCall {
+    position: fixed; inset: 0; background: rgba(0,0,0,.6);
+    display: none; align-items: center; justify-content: center; z-index: 1100;
+    backdrop-filter: blur(6px);
+}
+#incomingGroupBox {
+    background: var(--panel); border-radius: 28px; padding: 32px 36px;
+    box-shadow: 0 20px 60px rgba(0,0,0,.4); text-align: center;
+    display: flex; flex-direction: column; gap: 18px; min-width: 280px;
+    border: 1.5px solid var(--border);
+    animation: chatOpen .22s cubic-bezier(.4,0,.2,1) both;
+}
+#incomingGroupBox .caller { font-size: 1.25rem; font-weight: 800; letter-spacing: -.02em; }
+#incomingGroupBox .sub { font-size: 13px; color: var(--text2); }
+#acceptGroupCall { background: #10b981; color: #fff; padding: 12px 20px; border-radius: 50px; font-weight: 600; font-size: 13px; }
+#acceptGroupCall:hover { background: #059669; }
+#rejectGroupCall { background: #ef4444; color: #fff; padding: 12px 20px; border-radius: 50px; font-weight: 600; font-size: 13px; }
+#rejectGroupCall:hover { background: #dc2626; }
+
 /* ── Видеозвонок — полноэкранный оверлей ── */
 #videoCallOverlay {
     position: fixed; inset: 0; background: #0a0a14;
@@ -493,6 +513,64 @@ button:active { opacity: .85; transform: scale(.97); }
 .audio-mode .nc-avatar {
     width: 120px; height: 120px; font-size: 48px;
     animation: incomingPulse 2s ease infinite;
+}
+
+/* ── Демонстрация экрана собеседника — плавающее окно ── */
+#remoteScreenBox {
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: min(92vw, 1200px);
+    height: min(88vh, 800px);
+    background: #0a0a14;
+    border-radius: 20px;
+    box-shadow: 0 24px 80px rgba(0,0,0,.75);
+    border: 1.5px solid rgba(124,58,237,.5);
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+    z-index: 1050;
+    animation: overlayIn .18s ease both;
+}
+#remoteScreenBox.fullscreen-mode {
+    top: 0 !important; left: 0 !important; transform: none !important;
+    width: 100vw !important; height: 100vh !important;
+    border-radius: 0; border: none;
+}
+.rscreen-header {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 14px 8px;
+    background: rgba(0,0,0,.4);
+    flex-shrink: 0;
+}
+.rscreen-title {
+    flex: 1; font-size: 13px; font-weight: 700; color: rgba(255,255,255,.85);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.rscreen-btn {
+    background: rgba(255,255,255,.12); border: none; color: #fff;
+    border-radius: 8px; padding: 4px 10px; font-size: 13px;
+    cursor: pointer; transition: background .15s; flex-shrink: 0;
+}
+.rscreen-btn:hover { background: rgba(255,255,255,.22); }
+.rscreen-btn.close-btn { background: rgba(239,68,68,.4); }
+.rscreen-btn.close-btn:hover { background: rgba(239,68,68,.7); }
+#remoteScreenVideo {
+    flex: 1; width: 100%; min-height: 0;
+    object-fit: contain;
+    background: #000;
+}
+
+/* ── Групповой звонок — демонстрация экрана как большое окно внутри ── */
+.gcall-tile.screen-share {
+    flex: 0 0 auto !important;
+    width: min(100%, 700px) !important;
+    height: min(60vh, 440px) !important;
+    border: 2px solid #7c3aed;
+    cursor: zoom-in;
+}
+.gcall-tile.screen-share.expanded {
+    cursor: zoom-out;
 }
 
 @keyframes overlayIn {
@@ -772,6 +850,41 @@ button:active { opacity: .85; transform: scale(.97); }
     border-color: #10b981;
     box-shadow: 0 0 0 3px rgba(16,185,129,.4);
 }
+.gcall-tile video.gcall-video {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover; border-radius: 18px;
+}
+.gcall-tile.screen-share video.gcall-video {
+    object-fit: contain;
+}
+.gcall-tile.has-video .gcall-avatar,
+.gcall-tile.has-video .gcall-nick,
+.gcall-tile.has-video .gcall-status { display: none; }
+.gcall-tile.has-video { background: #000; cursor: pointer; }
+.gcall-tile .gcall-nick-overlay {
+    position: absolute; bottom: 8px; left: 10px;
+    font-size: 12px; font-weight: 700; color: #fff;
+    text-shadow: 0 1px 4px rgba(0,0,0,.8);
+    display: none; pointer-events: none;
+    z-index: 2;
+}
+.gcall-tile.has-video .gcall-nick-overlay { display: block; }
+/* развёрнутый тайл (по клику) */
+.gcall-tile.expanded {
+    position: fixed !important; inset: 0 !important;
+    width: 100vw !important; height: 100vh !important;
+    border-radius: 0 !important; z-index: 1200;
+    flex: none !important;
+}
+.gcall-tile.expanded video.gcall-video { border-radius: 0; object-fit: contain; }
+.gcall-tile.expanded .gcall-nick-overlay { font-size: 15px; bottom: 16px; left: 18px; }
+/* кнопка демонстрации экрана — активна */
+.vcall-btn.screen-active { background: rgba(124,58,237,.7) !important; color: #fff !important; }
+/* ЛС демонстрация — remoteVideo contain */
+#videoCallOverlay.screen-mode #remoteVideo { object-fit: contain; }
+/* gcall-grid адаптивный */
+.gcall-grid { align-items: flex-start; }
 .gcall-bottom-bar {
     padding: 0 0 36px;
     display: flex; justify-content: center; gap: 16px;
@@ -1154,11 +1267,23 @@ button:active { opacity: .85; transform: scale(.97); }
       <button class="vcall-btn" id="vcallMinimizeBtn" title="Свернуть">⊟</button>
     </div>
     <div class="video-bottom-bar">
-      <button class="vcall-btn" id="vcallMicBtn"  title="Микрофон">🎤</button>
-      <button class="vcall-btn" id="vcallCamBtn"  title="Камера">📷</button>
-      <button class="vcall-btn" id="vcallEndBtn"  title="Завершить">📵</button>
+      <button class="vcall-btn" id="vcallMicBtn"   title="Микрофон">🎤</button>
+      <button class="vcall-btn" id="vcallCamBtn"   title="Камера">📷</button>
+      <button class="vcall-btn" id="vcallScreenBtn" title="Демонстрация экрана">🖥️</button>
+      <button class="vcall-btn" id="vcallEndBtn"   title="Завершить">📵</button>
     </div>
   </div>
+</div>
+
+<!-- Remote screen share window (ЛС) -->
+<div id="remoteScreenBox">
+  <div class="rscreen-header">
+    <span style="font-size:16px">🖥️</span>
+    <div class="rscreen-title" id="remoteScreenTitle">Демонстрация экрана</div>
+    <button class="rscreen-btn" id="remoteScreenFullBtn" title="Развернуть">⛶</button>
+    <button class="rscreen-btn close-btn" id="remoteScreenCloseBtn" title="Скрыть">✕</button>
+  </div>
+  <video id="remoteScreenVideo" autoplay playsinline></video>
 </div>
 
 <!-- Incoming call -->
@@ -1175,6 +1300,19 @@ button:active { opacity: .85; transform: scale(.97); }
   </div>
 </div>
 
+<!-- Incoming group call -->
+<div id="incomingGroupCall">
+  <div id="incomingGroupBox">
+    <div style="font-size:40px;line-height:1;">👥</div>
+    <div class="caller" id="incomingGroupName">Групповой звонок</div>
+    <div class="sub" id="incomingGroupCaller"></div>
+    <div class="call-btns">
+      <button id="acceptGroupCall">🎤 Присоединиться</button>
+      <button id="rejectGroupCall">📵 Отклонить</button>
+    </div>
+  </div>
+</div>
+
 <!-- Group call overlay -->
 <div id="groupCallOverlay">
   <div class="gcall-header">
@@ -1184,8 +1322,10 @@ button:active { opacity: .85; transform: scale(.97); }
   </div>
   <div class="gcall-grid" id="gcallGrid"></div>
   <div class="gcall-bottom-bar">
-    <button class="vcall-btn" id="gcallMicBtn" title="Микрофон">🎤</button>
-    <button class="vcall-btn" id="gcallEndBtn" title="Завершить" style="background:#ef4444;color:#fff;width:64px;height:64px;font-size:24px;">📵</button>
+    <button class="vcall-btn" id="gcallMicBtn"    title="Микрофон">🎤</button>
+    <button class="vcall-btn" id="gcallCamBtn"    title="Камера">📷</button>
+    <button class="vcall-btn" id="gcallScreenBtn" title="Демонстрация экрана">🖥️</button>
+    <button class="vcall-btn" id="gcallEndBtn"    title="Завершить" style="background:#ef4444;color:#fff;width:64px;height:64px;font-size:24px;">📵</button>
   </div>
 </div>
 
@@ -1822,7 +1962,7 @@ function openGroupChat(gid) {
     typingIndicator.textContent = "";
     lastSeenLabel.textContent = "";
     document.getElementById("callBtn").style.display = "";
-    document.getElementById("videoCallBtn").style.display = "none";
+    document.getElementById("videoCallBtn").style.display = "";
     document.getElementById("addMemberBtn").style.display = "";
     updateChatAvatar(gid, true);
     renderContacts();
@@ -2847,6 +2987,9 @@ function stopCallSound() { callSound.pause(); callSound.currentTime = 0; }
 function endActiveCall() {
     if (peer) { peer.close(); peer = null; }
     if (localStream) { localStream.getTracks().forEach(t => t.stop()); localStream = null; }
+    if (screenStream) { screenStream.getTracks().forEach(t => t.stop()); screenStream = null; }
+    const sb = document.getElementById("vcallScreenBtn");
+    if (sb) { sb.classList.remove("screen-active"); sb.title = "Демонстрация экрана"; }
     stopCallSound();
     callBox.style.display = "none";
     videoCallOverlay.style.display = "none";
@@ -2854,6 +2997,8 @@ function endActiveCall() {
     localVideo.srcObject  = null;
     floatLocalVideo.srcObject = null;
     floatLocalVideo.style.display = "none";
+    remoteIsSharing = false;
+    hideRemoteScreenBox();
     isVideoCall = false; micMuted = false; camOff = false;
     callMinimized = false; callStartTime = null; callWasConnected = false; callTarget = null;
     document.getElementById("vcallMicBtn").classList.remove("muted");
@@ -2918,15 +3063,24 @@ function showCallUI(nick) {
     videoCallOverlay.style.animation = "";
 }
 
+let remoteIsSharing = false; // собеседник сейчас показывает экран
+
 // При подключении трека собеседника
 function onRemoteTrack(e) {
     const stream = e.streams[0];
-    if (isVideoCall) {
-        remoteVideo.srcObject = stream;
-        const hasVideo = stream.getVideoTracks().length > 0;
-        document.getElementById("remoteNoCam").style.display = hasVideo ? "none" : "flex";
+    if (e.track.kind === "video") {
+        if (remoteIsSharing) {
+            // демонстрация экрана — показываем в отдельном окне
+            showRemoteScreenBox(stream);
+        } else {
+            // обычное видео камеры
+            remoteVideo.srcObject = stream;
+            videoCallOverlay.classList.remove("audio-mode");
+            document.getElementById("remoteNoCam").style.display = "none";
+        }
+        return;
     }
-    // аудио воспроизводим всегда через отдельный элемент (и для аудио и для видео)
+    // аудиотрек
     const a = document.getElementById("remoteAudio") || (() => {
         const el = document.createElement("audio");
         el.id = "remoteAudio"; el.autoplay = true;
@@ -2935,6 +3089,74 @@ function onRemoteTrack(e) {
     a.srcObject = stream;
     a.play().catch(() => {});
 }
+
+function showRemoteScreenBox(stream) {
+    const box = document.getElementById("remoteScreenBox");
+    const vid = document.getElementById("remoteScreenVideo");
+    const title = document.getElementById("remoteScreenTitle");
+    vid.srcObject = stream;
+    title.textContent = (callTarget || "Собеседник") + " показывает экран";
+    box.style.display = "flex";
+}
+
+function hideRemoteScreenBox() {
+    const box = document.getElementById("remoteScreenBox");
+    const vid = document.getElementById("remoteScreenVideo");
+    box.classList.remove("fullscreen-mode");
+    box.style.display = "none";
+    vid.srcObject = null;
+}
+
+// Кнопки окна демонстрации
+document.getElementById("remoteScreenFullBtn").onclick = () => {
+    const box = document.getElementById("remoteScreenBox");
+    const btn = document.getElementById("remoteScreenFullBtn");
+    const full = box.classList.toggle("fullscreen-mode");
+    btn.textContent = full ? "⊟" : "⛶";
+    btn.title = full ? "Свернуть" : "Развернуть";
+    if (!full) {
+        // при выходе из полноэкранного — сброс позиции на центр
+        box.style.top = ""; box.style.left = "";
+        box.style.transform = "translate(-50%, -50%)";
+    }
+};
+document.getElementById("remoteScreenCloseBtn").onclick = () => {
+    hideRemoteScreenBox();
+};
+// Двойной клик по видео — тоже разворачивает
+document.getElementById("remoteScreenVideo").addEventListener("dblclick", () => {
+    document.getElementById("remoteScreenFullBtn").click();
+});
+
+// Перетаскивание окна демонстрации за заголовок
+(function() {
+    const box = document.getElementById("remoteScreenBox");
+    const header = box.querySelector(".rscreen-header");
+    let drag = false, ox = 0, oy = 0;
+    header.addEventListener("mousedown", e => {
+        if (box.classList.contains("fullscreen-mode")) return;
+        if (e.target.classList.contains("rscreen-btn")) return;
+        drag = true;
+        // переключаем с центрирования через transform на абсолютное позиционирование
+        const r = box.getBoundingClientRect();
+        box.style.top  = r.top + "px";
+        box.style.left = r.left + "px";
+        box.style.transform = "none";
+        ox = e.clientX - r.left;
+        oy = e.clientY - r.top;
+        e.preventDefault();
+    });
+    document.addEventListener("mousemove", e => {
+        if (!drag) return;
+        const vw = window.innerWidth, vh = window.innerHeight;
+        let x = e.clientX - ox, y = e.clientY - oy;
+        x = Math.max(0, Math.min(vw - box.offsetWidth, x));
+        y = Math.max(0, Math.min(vh - box.offsetHeight, y));
+        box.style.left = x + "px";
+        box.style.top  = y + "px";
+    });
+    document.addEventListener("mouseup", () => { drag = false; });
+})();
 
 async function startCall(withVideo) {
     if (!active) return;
@@ -2957,8 +3179,20 @@ async function startCall(withVideo) {
     socket.send(JSON.stringify({ type: "signal", from: myName, to: active, data: { ...offer, isVideo: isVideoCall } }));
 }
 
+// ── ICE конфиг ──────────────────────────────────────────────────────────────
+const ICE_SERVERS = {
+    iceServers: [
+        { urls: "stun:stun.l.google.com:19302" },
+        { urls: "stun:stun1.l.google.com:19302" },
+        { urls: "turn:global.relay.metered.ca:80",                   username: "2167bd1b46f6821adca92602", credential: "Cqgnn08Pb/FlzBT1" },
+        { urls: "turn:global.relay.metered.ca:80?transport=tcp",      username: "2167bd1b46f6821adca92602", credential: "Cqgnn08Pb/FlzBT1" },
+        { urls: "turn:global.relay.metered.ca:443",                  username: "2167bd1b46f6821adca92602", credential: "Cqgnn08Pb/FlzBT1" },
+        { urls: "turns:global.relay.metered.ca:443?transport=tcp",   username: "2167bd1b46f6821adca92602", credential: "Cqgnn08Pb/FlzBT1" },
+    ]
+};
+
 function createPeer(callTarget) {
-    const pc = new RTCPeerConnection({ iceServers: [{ urls: "stun:stun.l.google.com:19302" }] });
+    const pc = new RTCPeerConnection(ICE_SERVERS);
     pc.onicecandidate = e => {
         if (e.candidate)
             socket.send(JSON.stringify({ type: "signal", from: myName, to: callTarget, data: e.candidate }));
@@ -2981,6 +3215,24 @@ function createPeer(callTarget) {
 
 async function handleSignal(data) {
     if (data.data.type === "offer") {
+        // renegotiation во время активного звонка (например, демонстрация экрана)
+        if (peer && callTarget === data.from) {
+            // ставим флаг ДО setRemoteDescription — onRemoteTrack смотрит на него
+            if (data.data.isScreen) {
+                remoteIsSharing = true;
+            } else {
+                if (remoteIsSharing) {
+                    // собеседник остановил демонстрацию
+                    remoteIsSharing = false;
+                    hideRemoteScreenBox();
+                }
+            }
+            await peer.setRemoteDescription(new RTCSessionDescription(data.data));
+            const answer = await peer.createAnswer();
+            await peer.setLocalDescription(answer);
+            socket.send(JSON.stringify({ type: "signal", from: myName, to: data.from, data: answer }));
+            return;
+        }
         pendingOffer = data;
         const avaEl = document.getElementById("incomingAvatar");
         renderAvatar(avaEl, data.from, false);
@@ -3068,16 +3320,25 @@ document.getElementById("rejectCall").onclick = () => {
 document.getElementById("callBtn").onclick = () => {
     if (isGroupActive()) {
         if (gcallGroupId === active) {
-            // уже в этом звонке — показать оверлей
             groupCallOverlay.style.display = "flex";
         } else {
-            startGroupCall(active);
+            startGroupCall(active, false);
         }
     } else {
         startCall(false);
     }
 };
-document.getElementById("videoCallBtn").onclick = () => startCall(true);
+document.getElementById("videoCallBtn").onclick = () => {
+    if (isGroupActive()) {
+        if (gcallGroupId === active) {
+            groupCallOverlay.style.display = "flex";
+        } else {
+            startGroupCall(active, true);
+        }
+    } else {
+        startCall(true);
+    }
+};
 
 function doEndCall() {
     const t = callTarget || active;
@@ -3119,6 +3380,73 @@ document.getElementById("vcallCamBtn").onclick = () => {
     floatLocalVideo.style.opacity = camOff ? "0.3" : "1";
 };
 
+// Демонстрация экрана (ЛС)
+let screenStream = null;
+document.getElementById("vcallScreenBtn").onclick = async () => {
+    if (!peer) return;
+    const btn = document.getElementById("vcallScreenBtn");
+    if (screenStream) {
+        // остановить демонстрацию
+        screenStream.getTracks().forEach(t => t.stop());
+        screenStream = null;
+        btn.classList.remove("screen-active");
+        btn.title = "Демонстрация экрана";
+        videoCallOverlay.classList.remove("screen-mode");
+        const videoSender = peer.getSenders().find(s => s.track && s.track.kind === "video");
+        if (videoSender) {
+            if (localStream && localStream.getVideoTracks()[0] && !camOff) {
+                // возвращаем камеру + renegotiation
+                await videoSender.replaceTrack(localStream.getVideoTracks()[0]);
+                localVideo.srcObject = localStream;
+            } else {
+                // аудиозвонок или камера выключена — убираем видеотрек
+                await videoSender.replaceTrack(null);
+                videoCallOverlay.classList.add("audio-mode");
+                localVideo.srcObject = null;
+            }
+            // renegotiation нужна в обоих случаях
+            const offer = await peer.createOffer();
+            await peer.setLocalDescription(offer);
+            const isNowVideo = !!(localStream && localStream.getVideoTracks()[0] && !camOff);
+            socket.send(JSON.stringify({ type: "signal", from: myName, to: callTarget, data: { ...offer, isVideo: isNowVideo, isScreen: false } }));
+        }
+    } else {
+        try {
+            screenStream = await navigator.mediaDevices.getDisplayMedia({ video: { cursor: "always" }, audio: false });
+        } catch { return; }
+        btn.classList.add("screen-active");
+        btn.title = "Остановить демонстрацию";
+        videoCallOverlay.classList.add("screen-mode");
+        const screenTrack = screenStream.getVideoTracks()[0];
+        localVideo.srcObject = screenStream;
+
+        const videoSender = peer.getSenders().find(s => s.track && s.track.kind === "video");
+        if (videoSender) {
+            // уже есть видеотрек — заменяем и всё равно делаем renegotiation
+            // (разные размеры/fps у экрана vs камеры требуют нового SDP)
+            await videoSender.replaceTrack(screenTrack);
+        } else {
+            // аудиозвонок — добавляем трек
+            peer.addTrack(screenTrack, screenStream);
+            videoCallOverlay.classList.remove("audio-mode");
+        }
+        // renegotiation обязательна — экран и камера дают разные codec params
+        const offer = await peer.createOffer();
+        await peer.setLocalDescription(offer);
+        socket.send(JSON.stringify({ type: "signal", from: myName, to: callTarget, data: { ...offer, isVideo: true, isScreen: true } }));
+        screenTrack.onended = () => {
+            document.getElementById("vcallScreenBtn").click();
+        };
+    }
+};
+
+// Двойной клик на remoteVideo — свернуть localVideo чтобы лучше видеть демонстрацию
+remoteVideo.addEventListener("dblclick", () => {
+    const isSmall = localVideo.style.width === "60px";
+    localVideo.style.width  = isSmall ? "" : "60px";
+    localVideo.style.height = isSmall ? "" : "45px";
+});
+
 // Перетаскивание локального видео
 (function() {
     let dragging = false, ox = 0, oy = 0;
@@ -3139,15 +3467,20 @@ document.getElementById("vcallCamBtn").onclick = () => {
 })();
 
 // ── Групповые звонки ──────────────────────────────────────────────────────
-const groupCallOverlay = document.getElementById("groupCallOverlay");
-const gcallGrid        = document.getElementById("gcallGrid");
+const groupCallOverlay  = document.getElementById("groupCallOverlay");
+const gcallGrid         = document.getElementById("gcallGrid");
+const incomingGroupCall = document.getElementById("incomingGroupCall");
 
-let gcallGroupId   = null;   // активный групповой звонок
-let gcallPeers     = {};     // { nick: RTCPeerConnection }
-let gcallStream    = null;   // наш локальный стрим
-let gcallMicMuted  = false;
-let gcallStartTime = null;
-let gcallTimerInt  = null;
+let gcallGroupId      = null;   // активный групповой звонок
+let gcallPeers        = {};     // { nick: RTCPeerConnection }
+let gcallStream       = null;   // наш локальный стрим (камера/микро)
+let gcallScreenStream = null;   // наш стрим демонстрации экрана
+let gcallMicMuted     = false;
+let gcallCamOff       = false;
+let gcallStartTime    = null;
+let gcallTimerInt     = null;
+let pendingGroupCall  = null;   // { groupId, from } — ожидающий входящий звонок
+let gcallWithVideo    = false;  // видеорежим группового звонка
 
 function gcallSend(to, data) {
     socket.send(JSON.stringify({ type: "groupSignal", groupId: gcallGroupId, from: myName, to, data }));
@@ -3159,8 +3492,7 @@ function gcallTile(nick) {
     tile = document.createElement("div");
     tile.className = "gcall-tile";
     tile.id = "gcall-tile-" + nick;
-    // размер в зависимости от числа участников
-    tile.style.cssText = "width:160px;height:160px;flex:0 0 auto;";
+    tile.style.cssText = "width:200px;height:150px;flex:0 0 auto;";
 
     const ava = document.createElement("div");
     ava.className = "gcall-avatar";
@@ -3175,11 +3507,59 @@ function gcallTile(nick) {
     statusEl.id = "gcall-status-" + nick;
     statusEl.textContent = nick === myName ? "● подключён" : "соединение...";
 
+    // оверлей с именем поверх видео
+    const nickOverlay = document.createElement("div");
+    nickOverlay.className = "gcall-nick-overlay";
+    nickOverlay.textContent = nick === myName ? "Вы" : nick;
+
+    // двойной клик — развернуть/свернуть тайл
+    tile.addEventListener("dblclick", () => gcallToggleExpand(tile));
+
     tile.appendChild(ava);
     tile.appendChild(nickEl);
     tile.appendChild(statusEl);
+    tile.appendChild(nickOverlay);
     gcallGrid.appendChild(tile);
     return tile;
+}
+
+let gcallExpandedTile = null;
+
+function gcallToggleExpand(tile) {
+    if (!tile.classList.contains("has-video")) return;
+    if (gcallExpandedTile && gcallExpandedTile !== tile) {
+        gcallExpandedTile.classList.remove("expanded");
+    }
+    const expanding = !tile.classList.contains("expanded");
+    tile.classList.toggle("expanded", expanding);
+    gcallExpandedTile = expanding ? tile : null;
+}
+
+// показать/скрыть видео в тайле
+function gcallTileVideo(nick, stream, isScreen) {
+    const tile = document.getElementById("gcall-tile-" + nick);
+    if (!tile) return;
+    let vid = tile.querySelector("video.gcall-video");
+    if (!stream) {
+        if (vid) { vid.srcObject = null; vid.remove(); }
+        tile.classList.remove("has-video", "screen-share");
+        if (gcallExpandedTile === tile) { tile.classList.remove("expanded"); gcallExpandedTile = null; }
+        return;
+    }
+    if (!vid) {
+        vid = document.createElement("video");
+        vid.className = "gcall-video";
+        vid.autoplay = true; vid.playsinline = true; vid.muted = (nick === myName);
+        tile.insertBefore(vid, tile.firstChild);
+    }
+    vid.srcObject = stream;
+    tile.classList.add("has-video");
+    if (isScreen) {
+        tile.classList.add("screen-share");
+        tile.style.cssText = ""; // сбрасываем фиксированный размер чтобы сработал flex
+    } else {
+        tile.classList.remove("screen-share");
+    }
 }
 
 function gcallSetStatus(nick, text) {
@@ -3193,9 +3573,11 @@ function gcallRemoveTile(nick) {
 }
 
 function gcallCreatePeer(nick, initiator) {
-    const pc = new RTCPeerConnection({ iceServers: [{ urls: "stun:stun.l.google.com:19302" }] });
+    const pc = new RTCPeerConnection(ICE_SERVERS);
 
+    // добавляем все свои треки
     if (gcallStream) gcallStream.getTracks().forEach(t => pc.addTrack(t, gcallStream));
+    if (gcallScreenStream) gcallScreenStream.getVideoTracks().forEach(t => pc.addTrack(t, gcallScreenStream));
 
     pc.onicecandidate = e => {
         if (e.candidate) gcallSend(nick, { type: "candidate", candidate: e.candidate });
@@ -3203,34 +3585,44 @@ function gcallCreatePeer(nick, initiator) {
 
     pc.ontrack = e => {
         gcallSetStatus(nick, "● подключён");
-        // аудио — создаём audio-элемент
-        const a = document.getElementById("gcall-audio-" + nick) || (() => {
-            const el = document.createElement("audio");
-            el.id = "gcall-audio-" + nick;
-            el.autoplay = true;
-            document.body.appendChild(el);
-            return el;
-        })();
-        a.srcObject = e.streams[0];
-        a.play().catch(() => {});
+        const stream = e.streams[0];
 
-        // определяем говорящего через AudioContext
-        try {
-            const ctx = new (window.AudioContext || window.webkitAudioContext)();
-            const src = ctx.createMediaStreamSource(e.streams[0]);
-            const analyser = ctx.createAnalyser();
-            analyser.fftSize = 256;
-            src.connect(analyser);
-            const buf = new Uint8Array(analyser.frequencyBinCount);
-            const tile = document.getElementById("gcall-tile-" + nick);
-            (function check() {
-                if (!gcallPeers[nick]) return;
-                analyser.getByteFrequencyData(buf);
-                const vol = buf.reduce((a, b) => a + b, 0) / buf.length;
-                if (tile) tile.classList.toggle("speaking", vol > 10);
-                requestAnimationFrame(check);
+        if (e.track.kind === "audio") {
+            // аудио
+            const a = document.getElementById("gcall-audio-" + nick) || (() => {
+                const el = document.createElement("audio");
+                el.id = "gcall-audio-" + nick;
+                el.autoplay = true;
+                document.body.appendChild(el);
+                return el;
             })();
-        } catch {}
+            a.srcObject = stream;
+            a.play().catch(() => {});
+
+            // определяем говорящего через AudioContext
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const src = ctx.createMediaStreamSource(stream);
+                const analyser = ctx.createAnalyser();
+                analyser.fftSize = 256;
+                src.connect(analyser);
+                const buf = new Uint8Array(analyser.frequencyBinCount);
+                const tile = document.getElementById("gcall-tile-" + nick);
+                (function check() {
+                    if (!gcallPeers[nick]) return;
+                    analyser.getByteFrequencyData(buf);
+                    const vol = buf.reduce((a, b) => a + b, 0) / buf.length;
+                    if (tile) tile.classList.toggle("speaking", vol > 10);
+                    requestAnimationFrame(check);
+                })();
+            } catch {}
+        } else if (e.track.kind === "video") {
+            // isScreen определяется сервером через явный сигнал screen-start,
+            // здесь просто показываем видео; screen-share класс выставляется в handleGroupSignal
+            const tile = document.getElementById("gcall-tile-" + nick);
+            const isScreen = tile ? tile.classList.contains("screen-share") : false;
+            gcallTileVideo(nick, stream, isScreen);
+        }
     };
 
     pc.onconnectionstatechange = () => {
@@ -3243,7 +3635,7 @@ function gcallCreatePeer(nick, initiator) {
     gcallPeers[nick] = pc;
 
     if (initiator) {
-        pc.createOffer().then(offer => {
+        pc.createOffer({ offerToReceiveAudio: true, offerToReceiveVideo: true }).then(offer => {
             pc.setLocalDescription(offer);
             gcallSend(nick, { type: "offer", sdp: offer });
         });
@@ -3256,26 +3648,39 @@ function gcallRemovePeer(nick) {
     if (gcallPeers[nick]) { gcallPeers[nick].close(); delete gcallPeers[nick]; }
     const a = document.getElementById("gcall-audio-" + nick);
     if (a) a.remove();
+    gcallTileVideo(nick, null);
     gcallRemoveTile(nick);
 }
 
-async function startGroupCall(gid) {
+async function startGroupCall(gid, withVideo) {
     if (gcallGroupId) return; // уже в звонке
     const group = state.groups[gid];
     if (!group) return;
 
     gcallGroupId = gid;
+    gcallWithVideo = !!withVideo;
+    const constraints = { audio: true, video: gcallWithVideo ? { width: 1280, height: 720 } : false };
     try {
-        gcallStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        gcallStream = await navigator.mediaDevices.getUserMedia(constraints);
     } catch {
-        alert("Нет доступа к микрофону"); gcallGroupId = null; return;
+        try {
+            gcallStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            gcallWithVideo = false;
+        } catch {
+            alert("Нет доступа к микрофону"); gcallGroupId = null; return;
+        }
     }
 
     // UI
     document.getElementById("gcallTitle").textContent = group.name;
+    document.getElementById("gcallCamBtn").style.display = gcallWithVideo ? "" : "";
     gcallGrid.innerHTML = "";
-    gcallTile(myName); // своя плитка
+    gcallTile(myName);
     gcallSetStatus(myName, "● подключён");
+
+    // показываем своё видео в тайле
+    if (gcallWithVideo) gcallTileVideo(myName, gcallStream, false);
+
     gcallStartTime = Date.now();
     gcallTimerInt = setInterval(() => {
         const s = Math.floor((Date.now() - gcallStartTime) / 1000);
@@ -3288,7 +3693,7 @@ async function startGroupCall(gid) {
     // оповещаем участников что мы входим
     const others = group.members.filter(m => m !== myName);
     others.forEach(nick => {
-        socket.send(JSON.stringify({ type: "groupSignal", groupId: gid, from: myName, to: nick, data: { type: "join" } }));
+        socket.send(JSON.stringify({ type: "groupSignal", groupId: gid, from: myName, to: nick, data: { type: "join", withVideo: gcallWithVideo } }));
     });
 }
 
@@ -3302,13 +3707,17 @@ function endGroupCall() {
     }
     Object.keys(gcallPeers).forEach(gcallRemovePeer);
     if (gcallStream) { gcallStream.getTracks().forEach(t => t.stop()); gcallStream = null; }
+    if (gcallScreenStream) { gcallScreenStream.getTracks().forEach(t => t.stop()); gcallScreenStream = null; }
     clearInterval(gcallTimerInt); gcallTimerInt = null;
-    gcallGroupId = null; gcallMicMuted = false; gcallStartTime = null;
+    gcallGroupId = null; gcallMicMuted = false; gcallCamOff = false; gcallWithVideo = false; gcallStartTime = null;
     groupCallOverlay.style.display = "none";
     gcallGrid.innerHTML = "";
     document.getElementById("gcallTimer").textContent = "0:00";
     document.getElementById("gcallMicBtn").textContent = "🎤";
     document.getElementById("gcallMicBtn").classList.remove("muted");
+    document.getElementById("gcallCamBtn").textContent = "📷";
+    document.getElementById("gcallCamBtn").classList.remove("off");
+    document.getElementById("gcallScreenBtn").classList.remove("screen-active");
 }
 
 async function handleGroupSignal(data) {
@@ -3317,14 +3726,23 @@ async function handleGroupSignal(data) {
         if (data.data.type === "join") {
             const group = state.groups[data.groupId];
             if (!group || !group.members.includes(myName)) return;
-            // присоединяемся если ещё не в звонке
             if (!gcallGroupId) {
-                await startGroupCall(data.groupId);
-            }
-            // создаём peer к звонящему (они оффер не слали ещё — мы сами инициируем к ним)
-            if (!gcallPeers[data.from]) {
-                gcallTile(data.from);
-                gcallCreatePeer(data.from, true);
+                // показываем уведомление о входящем групповом звонке (только один раз)
+                if (!pendingGroupCall) {
+                    pendingGroupCall = { groupId: data.groupId, from: data.from, withVideo: !!data.data.withVideo };
+                    document.getElementById("incomingGroupName").textContent = group.name;
+                    const callType = data.data.withVideo ? "🎥 Видеозвонок" : "🎤 Аудиозвонок";
+                    document.getElementById("incomingGroupCaller").textContent = data.from + " начал(а) " + callType.toLowerCase();
+                    document.getElementById("acceptGroupCall").textContent = data.data.withVideo ? "🎥 Присоединиться" : "🎤 Присоединиться";
+                    incomingGroupCall.style.display = "flex";
+                    callSound.play().catch(() => {});
+                }
+            } else {
+                // мы уже в этом звонке — просто добавляем peer
+                if (!gcallPeers[data.from]) {
+                    gcallTile(data.from);
+                    gcallCreatePeer(data.from, true);
+                }
             }
         }
         return;
@@ -3355,6 +3773,7 @@ async function handleGroupSignal(data) {
             gcallCreatePeer(from, false);
         }
         const pc = gcallPeers[from];
+        // renegotiation — просто обновляем SDP без пересоздания peer
         await pc.setRemoteDescription(new RTCSessionDescription(msg.sdp));
         const answer = await pc.createAnswer();
         await pc.setLocalDescription(answer);
@@ -3373,9 +3792,55 @@ async function handleGroupSignal(data) {
         if (pc) try { await pc.addIceCandidate(new RTCIceCandidate(msg.candidate)); } catch {}
         return;
     }
+
+    if (msg.type === "screen-start") {
+        // пометить тайл как screen-share заранее — ontrack сработает чуть позже
+        const tile = document.getElementById("gcall-tile-" + from);
+        if (tile) {
+            tile.classList.add("screen-share");
+            tile.style.cssText = ""; // сбросить фиксированный размер
+        }
+        return;
+    }
+
+    if (msg.type === "screen-stop") {
+        const tile = document.getElementById("gcall-tile-" + from);
+        if (tile) {
+            tile.classList.remove("screen-share");
+            tile.style.cssText = "width:200px;height:150px;flex:0 0 auto;";
+            if (gcallExpandedTile === tile) { tile.classList.remove("expanded"); gcallExpandedTile = null; }
+        }
+        // видео может остаться (камера) или исчезнет — ontrack обновит
+        // если камеры не было — убираем видео из тайла
+        if (!gcallPeers[from]) return;
+        const pc = gcallPeers[from];
+        const hasOtherVideo = pc.getReceivers().some(r => r.track && r.track.kind === "video" && r.track.readyState === "live");
+        if (!hasOtherVideo) gcallTileVideo(from, null, false);
+        return;
+    }
 }
 
 document.getElementById("gcallEndBtn").onclick = endGroupCall;
+
+document.getElementById("acceptGroupCall").onclick = async () => {
+    if (!pendingGroupCall) return;
+    const { groupId, from, withVideo } = pendingGroupCall;
+    pendingGroupCall = null;
+    incomingGroupCall.style.display = "none";
+    stopCallSound();
+    await startGroupCall(groupId, withVideo);
+    // создаём peer к тому, кто позвонил
+    if (!gcallPeers[from]) {
+        gcallTile(from);
+        gcallCreatePeer(from, true);
+    }
+};
+
+document.getElementById("rejectGroupCall").onclick = () => {
+    pendingGroupCall = null;
+    incomingGroupCall.style.display = "none";
+    stopCallSound();
+};
 
 document.getElementById("gcallMicBtn").onclick = () => {
     if (!gcallStream) return;
@@ -3384,6 +3849,85 @@ document.getElementById("gcallMicBtn").onclick = () => {
     const btn = document.getElementById("gcallMicBtn");
     btn.textContent = gcallMicMuted ? "🔇" : "🎤";
     btn.classList.toggle("muted", gcallMicMuted);
+};
+
+document.getElementById("gcallCamBtn").onclick = () => {
+    if (!gcallStream) return;
+    gcallCamOff = !gcallCamOff;
+    gcallStream.getVideoTracks().forEach(t => { t.enabled = !gcallCamOff; });
+    const btn = document.getElementById("gcallCamBtn");
+    btn.textContent = gcallCamOff ? "🚫" : "📷";
+    btn.classList.toggle("off", gcallCamOff);
+    if (gcallCamOff) {
+        gcallTileVideo(myName, null);
+    } else if (gcallStream.getVideoTracks().length) {
+        gcallTileVideo(myName, gcallStream, false);
+    }
+};
+
+document.getElementById("gcallScreenBtn").onclick = async () => {
+    if (!gcallGroupId) return;
+    const btn = document.getElementById("gcallScreenBtn");
+    if (gcallScreenStream) {
+        // ── остановить демонстрацию ──
+        gcallScreenStream.getTracks().forEach(t => t.stop());
+        gcallScreenStream = null;
+        btn.classList.remove("screen-active");
+        btn.title = "Демонстрация экрана";
+
+        // убрать видео экрана из своего тайла, показать камеру если была
+        gcallTileVideo(myName, gcallWithVideo && !gcallCamOff ? gcallStream : null, false);
+
+        // уведомляем всех об остановке демонстрации
+        Object.keys(gcallPeers).forEach(nick => gcallSend(nick, { type: "screen-stop" }));
+
+        // заменяем видеотрек обратно на камеру (или null) + renegotiation
+        for (const [peerNick, pc] of Object.entries(gcallPeers)) {
+            const sender = pc.getSenders().find(s => s.track && s.track.kind === "video");
+            if (sender) {
+                const camTrack = gcallStream && gcallStream.getVideoTracks()[0];
+                await sender.replaceTrack(camTrack && !gcallCamOff ? camTrack : null);
+            }
+            // renegotiation после замены
+            const offer = await pc.createOffer();
+            await pc.setLocalDescription(offer);
+            gcallSend(peerNick, { type: "offer", sdp: offer });
+        }
+    } else {
+        // ── начать демонстрацию ──
+        let stream;
+        try {
+            stream = await navigator.mediaDevices.getDisplayMedia({ video: { cursor: "always" }, audio: false });
+        } catch { return; }
+        gcallScreenStream = stream;
+        btn.classList.add("screen-active");
+        btn.title = "Остановить демонстрацию";
+        const screenTrack = stream.getVideoTracks()[0];
+
+        // показываем своё видео экрана в тайле
+        gcallTileVideo(myName, stream, true);
+
+        // уведомляем всех о начале демонстрации ДО renegotiation
+        // чтобы удалённые peer знали что следующий видеотрек — это экран
+        Object.keys(gcallPeers).forEach(nick => gcallSend(nick, { type: "screen-start" }));
+
+        // добавляем или заменяем видеотрек у каждого peer + renegotiation
+        for (const [peerNick, pc] of Object.entries(gcallPeers)) {
+            const existingSender = pc.getSenders().find(s => s.track && s.track.kind === "video");
+            if (existingSender) {
+                await existingSender.replaceTrack(screenTrack);
+            } else {
+                pc.addTrack(screenTrack, stream);
+            }
+            const offer = await pc.createOffer();
+            await pc.setLocalDescription(offer);
+            gcallSend(peerNick, { type: "offer", sdp: offer });
+        }
+
+        screenTrack.onended = () => {
+            document.getElementById("gcallScreenBtn").click();
+        };
+    }
 };
 
 document.getElementById("gcallMinimizeBtn").onclick = () => {
