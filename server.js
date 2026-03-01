@@ -4,7 +4,8 @@ const http      = require('http');
 const fs        = require('fs');
 const path      = require('path');
 const crypto    = require('crypto');
-const webpush   = require('web-push');
+const webpush    = require('web-push');
+const nodemailer = require('nodemailer');
 
 // ── VAPID (Web Push) ────────────────────────────────────────────────────────
 let vapidPublicKey  = process.env.VAPID_PUBLIC_KEY;
@@ -35,9 +36,19 @@ function saveJSON(name, data) {
 
 // Структуры данных в памяти (персистируются в JSON)
 let users    = loadJSON('users', {});    // { nick: { hash, salt } }
-let groups   = loadJSON('groups', {});   // { id: { id, name, members, creator } }
+let groups   = loadJSON('groups', {});   // { id: { id, name, members, creator, avatar? } }
 let queue    = loadJSON('queue', {});    // { nick: [msg, ...] }
 let pushSubs = loadJSON('pushSubs', {}); // { nick: [{ endpoint, keys... }, ...] }
+
+// ── SMTP (nodemailer) ────────────────────────────────────────────────────────
+const smtpTransport = nodemailer.createTransport({
+    service: 'gmail',
+    auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS }
+});
+
+// ── Pending registrations (in-memory) ────────────────────────────────────────
+const pendingRegistrations = {}; // key = email -> { nick, email, hash, salt, code, expiresAt }
+const pendingLogins = {};        // key = nick -> { code, expiresAt }
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 function hashPassword(password, saltHex) {
@@ -149,29 +160,78 @@ wss.on('connection', ws => {
         let data;
         try { data = JSON.parse(raw); } catch { return; }
 
-        // ── register ───────────────────────────────────────────────────────
+        // ── register (step 1: send code) ─────────────────────────────────
         if (data.type === 'register') {
-            const nick = (data.nick || '').trim();
-            const pwd  = data.password || '';
+            const nick  = (data.nick || '').trim();
+            const pwd   = data.password || '';
+            const email = (data.email || '').trim().toLowerCase();
             if (!/^[a-zA-Z0-9_]{1,32}$/.test(nick)) {
                 ws.send(JSON.stringify({ type: 'authResult', success: false, error: 'Ник: 1–32 символа, только a-z A-Z 0-9 _' })); return;
             }
             if (pwd.length < 6 || pwd.length > 128) {
                 ws.send(JSON.stringify({ type: 'authResult', success: false, error: 'Пароль: 6–128 символов' })); return;
             }
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                ws.send(JSON.stringify({ type: 'authResult', success: false, error: 'Некорректный email' })); return;
+            }
             if (users[nick]) {
                 ws.send(JSON.stringify({ type: 'authResult', success: false, error: 'Ник уже занят' })); return;
             }
+            // check email uniqueness
+            for (const u in users) {
+                if (users[u].email === email) {
+                    ws.send(JSON.stringify({ type: 'authResult', success: false, error: 'Email уже используется' })); return;
+                }
+            }
             const salt = crypto.randomBytes(32).toString('hex');
-            users[nick] = { hash: hashPassword(pwd, salt), salt };
-            saveJSON('users', users);
-            ws.authenticated = true; ws.name = nick; clients[nick] = ws;
-            broadcastOnline();
-            ws.send(JSON.stringify({ type: 'authResult', success: true, nick }));
+            const code = String(Math.floor(100000 + Math.random() * 900000));
+            pendingRegistrations[email] = { nick, email, hash: hashPassword(pwd, salt), salt, code, expiresAt: Date.now() + 5 * 60 * 1000 };
+            try {
+                await smtpTransport.sendMail({
+                    from: process.env.SMTP_USER,
+                    to: email,
+                    subject: 'Код подтверждения регистрации',
+                    text: 'Ваш код: ' + code
+                });
+                ws.send(JSON.stringify({ type: 'codeSent', email }));
+            } catch (err) {
+                console.error('SMTP error:', err);
+                delete pendingRegistrations[email];
+                ws.send(JSON.stringify({ type: 'authResult', success: false, error: 'Не удалось отправить письмо' }));
+            }
             return;
         }
 
-        // ── login ──────────────────────────────────────────────────────────
+        // ── verifyCode (step 2: confirm code) ────────────────────────────
+        if (data.type === 'verifyCode') {
+            const email = (data.email || '').trim().toLowerCase();
+            const code  = (data.code || '').trim();
+            const pending = pendingRegistrations[email];
+            if (!pending) {
+                ws.send(JSON.stringify({ type: 'authResult', success: false, error: 'Запрос не найден. Зарегистрируйтесь заново' })); return;
+            }
+            if (Date.now() > pending.expiresAt) {
+                delete pendingRegistrations[email];
+                ws.send(JSON.stringify({ type: 'authResult', success: false, error: 'Код истёк. Зарегистрируйтесь заново' })); return;
+            }
+            if (pending.code !== code) {
+                ws.send(JSON.stringify({ type: 'authResult', success: false, error: 'Неверный код' })); return;
+            }
+            // check nick still free
+            if (users[pending.nick]) {
+                delete pendingRegistrations[email];
+                ws.send(JSON.stringify({ type: 'authResult', success: false, error: 'Ник уже занят' })); return;
+            }
+            users[pending.nick] = { hash: pending.hash, salt: pending.salt, email: pending.email };
+            saveJSON('users', users);
+            delete pendingRegistrations[email];
+            ws.authenticated = true; ws.name = pending.nick; clients[pending.nick] = ws;
+            broadcastOnline();
+            ws.send(JSON.stringify({ type: 'authResult', success: true, nick: pending.nick }));
+            return;
+        }
+
+        // ── login (step 1: verify password, send code to email) ──────────
         if (data.type === 'login') {
             const nick = (data.nick || '').trim();
             const pwd  = data.password || '';
@@ -179,6 +239,59 @@ wss.on('connection', ws => {
             if (!user || hashPassword(pwd, user.salt) !== user.hash) {
                 ws.send(JSON.stringify({ type: 'authResult', success: false, error: !user ? 'Неизвестный ник' : 'Неверный пароль' })); return;
             }
+            if (!user.email) {
+                // legacy user without email — let them in directly
+                if (clients[nick] && clients[nick] !== ws) {
+                    try { clients[nick].send(JSON.stringify({ type: 'kicked' })); clients[nick].close(); } catch {}
+                }
+                ws.authenticated = true; ws.name = nick; clients[nick] = ws;
+                broadcastOnline();
+                ws.send(JSON.stringify({ type: 'authResult', success: true, nick }));
+                const pending = flushQueue(nick);
+                for (const m of pending) ws.send(JSON.stringify(m));
+                const myGroups = {};
+                for (const id in groups) {
+                    if (groups[id].members.includes(nick)) myGroups[id] = groups[id];
+                }
+                if (Object.keys(myGroups).length)
+                    ws.send(JSON.stringify({ type: 'groupList', groups: myGroups }));
+                return;
+            }
+            // send verification code to email
+            const code = String(Math.floor(100000 + Math.random() * 900000));
+            pendingLogins[nick] = { code, expiresAt: Date.now() + 5 * 60 * 1000 };
+            try {
+                await smtpTransport.sendMail({
+                    from: process.env.SMTP_USER,
+                    to: user.email,
+                    subject: 'Код для входа',
+                    text: 'Ваш код: ' + code
+                });
+                ws.send(JSON.stringify({ type: 'codeSent', email: user.email, loginNick: nick }));
+            } catch (err) {
+                console.error('SMTP error:', err);
+                delete pendingLogins[nick];
+                ws.send(JSON.stringify({ type: 'authResult', success: false, error: 'Не удалось отправить письмо' }));
+            }
+            return;
+        }
+
+        // ── verifyLoginCode (step 2: confirm login code) ─────────────────
+        if (data.type === 'verifyLoginCode') {
+            const nick = (data.nick || '').trim();
+            const code = (data.code || '').trim();
+            const pl = pendingLogins[nick];
+            if (!pl) {
+                ws.send(JSON.stringify({ type: 'authResult', success: false, error: 'Запрос не найден. Войдите заново' })); return;
+            }
+            if (Date.now() > pl.expiresAt) {
+                delete pendingLogins[nick];
+                ws.send(JSON.stringify({ type: 'authResult', success: false, error: 'Код истёк. Войдите заново' })); return;
+            }
+            if (pl.code !== code) {
+                ws.send(JSON.stringify({ type: 'authResult', success: false, error: 'Неверный код' })); return;
+            }
+            delete pendingLogins[nick];
             if (clients[nick] && clients[nick] !== ws) {
                 try { clients[nick].send(JSON.stringify({ type: 'kicked' })); clients[nick].close(); } catch {}
             }
@@ -243,7 +356,8 @@ wss.on('connection', ws => {
             if (members.length < 2) return;
             for (const m of members) { if (!users[m]) return; }
             const id = 'g_' + Date.now().toString(36) + '_' + crypto.randomBytes(4).toString('hex');
-            const group = { id, name, members, creator: ws.name };
+            const avatar = typeof data.avatar === 'string' && data.avatar.startsWith('data:image/') ? data.avatar : undefined;
+            const group = { id, name, members, creator: ws.name, avatar };
             groups[id] = group;
             saveJSON('groups', groups);
             const notif = { type: 'groupCreated', group };
@@ -255,6 +369,24 @@ wss.on('connection', ws => {
         }
 
         // ── addGroupMember ─────────────────────────────────────────────────
+
+        // ── setGroupAvatar ────────────────────────────────────────────────
+        if (data.type === 'setGroupAvatar') {
+            const group = groups[data.groupId];
+            if (!group || !group.members.includes(ws.name)) return;
+            const avatar = (typeof data.avatar === 'string' && data.avatar.startsWith('data:image/')) ? data.avatar : null;
+            if (avatar && avatar.length > 2_000_000) return;
+            if (avatar) group.avatar = avatar;
+            else delete group.avatar;
+            saveJSON('groups', groups);
+            const notif = { type: 'groupUpdated', groupId: data.groupId, group };
+            for (const m of group.members) {
+                if (clients[m]) clients[m].send(JSON.stringify(notif));
+                else enqueue(m, notif);
+            }
+            return;
+        }
+
         if (data.type === 'addGroupMember') {
             const nick = (data.nick || '').trim();
             if (!nick || !users[nick]) { ws.send(JSON.stringify({ type: 'addMemberError', groupId: data.groupId, error: 'no_user' })); return; }

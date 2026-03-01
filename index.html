@@ -7,48 +7,48 @@
 <style>
 /* ── Темы ── */
 :root {
-    --accent: #7c3aed;
-    --accent2: #06b6d4;
-    --accent-hover: #6d28d9;
-    --bg: #f0eeff;
+    --accent: #f97316;
+    --accent2: #facc15;
+    --accent-hover: #ea580c;
+    --bg: #fffaf2;
     --panel: #ffffff;
-    --sidebar-bg: #faf8ff;
-    --border: #e4dff7;
-    --text: #1a1033;
-    --text2: #7c6fa0;
-    --me-bg: linear-gradient(135deg, #7c3aed, #06b6d4);
+    --sidebar-bg: #fff6e8;
+    --border: #f2d8b5;
+    --text: #3a220e;
+    --text2: #8a6241;
+    --me-bg: linear-gradient(135deg, #f97316 0%, #fb923c 72%, #facc15 100%);
     --me-text: #ffffff;
-    --them-bg: #f0eeff;
-    --them-border: #e4dff7;
-    --input-bg: #f7f4ff;
-    --input-border: #d4ccf0;
-    --hover: #f0eeff;
-    --shadow: rgba(124,58,237,.10);
+    --them-bg: #fff3de;
+    --them-border: #f2d8b5;
+    --input-bg: #fff8ed;
+    --input-border: #efcfa7;
+    --hover: #fff1db;
+    --shadow: rgba(249,115,22,.14);
     --topbar-bg: #ffffff;
-    --active-contact: #ede8ff;
-    --active-contact-border: #c4b5fd;
+    --active-contact: #ffe9c8;
+    --active-contact-border: #f59e0b;
 }
 [data-theme="dark"] {
-    --accent: #a78bfa;
-    --accent2: #22d3ee;
-    --accent-hover: #7c3aed;
-    --bg: #0d0a1a;
-    --panel: #160f2e;
-    --sidebar-bg: #120d26;
-    --border: #2a1f4e;
-    --text: #ede9fe;
-    --text2: #9d88c8;
-    --me-bg: linear-gradient(135deg, #7c3aed, #0e7490);
+    --accent: #fb923c;
+    --accent2: #facc15;
+    --accent-hover: #f97316;
+    --bg: #1a1208;
+    --panel: #24180c;
+    --sidebar-bg: #201408;
+    --border: #3a2714;
+    --text: #ffedd5;
+    --text2: #d2a679;
+    --me-bg: linear-gradient(135deg, #f97316 0%, #ea580c 72%, #facc15 100%);
     --me-text: #ffffff;
-    --them-bg: #1e1640;
-    --them-border: #2a1f4e;
-    --input-bg: #1a1138;
-    --input-border: #3b2d6e;
-    --hover: #1e1640;
-    --shadow: rgba(0,0,0,.4);
-    --topbar-bg: #160f2e;
-    --active-contact: #251b50;
-    --active-contact-border: #7c3aed;
+    --them-bg: #2a1c0e;
+    --them-border: #3a2714;
+    --input-bg: #2f1e10;
+    --input-border: #5a3a1f;
+    --hover: #322112;
+    --shadow: rgba(0,0,0,.45);
+    --topbar-bg: #24180c;
+    --active-contact: #3a240f;
+    --active-contact-border: #fb923c;
 }
 
 /* ── Reset ── */
@@ -57,7 +57,7 @@ body {
     margin: 0;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
     font-size: 14px;
-    background: var(--bg);
+    background: linear-gradient(180deg, rgba(250,204,21,.08), rgba(249,115,22,.04) 24%, transparent 58%), var(--bg);
     color: var(--text);
     height: 100dvh;
     display: flex;
@@ -118,7 +118,7 @@ input, textarea {
 }
 input:focus {
     border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(124,58,237,.12);
+    box-shadow: 0 0 0 3px rgba(249,115,22,.18);
 }
 button {
     padding: 10px 20px;
@@ -144,6 +144,30 @@ button:active { opacity: .85; transform: scale(.97); }
     color: var(--text2);
     border-radius: 12px;
 }
+.btn-icon.icon-only {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 9px;
+}
+.icon-btn-svg {
+    width: 20px;
+    height: 20px;
+    display: block;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.9;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    pointer-events: none;
+}
+.btn-with-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+.btn-with-icon .icon-btn-svg { width: 18px; height: 18px; }
 .btn-icon:hover { background: var(--hover); color: var(--text); }
 .btn-danger { background: #fee2e2; color: #dc2626; border-radius: 12px; }
 .btn-danger:hover { background: #fecaca; }
@@ -178,8 +202,14 @@ button:active { opacity: .85; transform: scale(.97); }
     box-shadow: 0 2px 12px var(--shadow);
 }
 .contact-left { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
-.contact-name { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 14px; }
+.contact-name { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 14px; display: flex; align-items: center; gap: 4px; }
 .contact-typing { font-size: 11px; color: var(--accent); font-style: italic; height: 14px; }
+.contact-preview { font-size: 12px; color: var(--text2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; height: 16px; display: flex; align-items: center; gap: 4px; }
+.contact-preview .preview-ticks { flex-shrink: 0; font-size: 10px; color: var(--text2); }
+.contact-preview .preview-ticks.read { color: var(--accent); }
+.contact-preview .preview-sender { font-weight: 600; color: var(--text); flex-shrink: 0; }
+.contact-preview .preview-text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.contact-time { font-size: 10px; color: var(--text2); white-space: nowrap; }
 .contact-right { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; flex-shrink: 0; }
 .status-online { color: #10b981; font-size: 11px; font-weight: 600; }
 .status-offline { color: var(--text2); font-size: 11px; }
@@ -195,7 +225,7 @@ button:active { opacity: .85; transform: scale(.97); }
     align-items: center;
     justify-content: center;
     padding: 0 6px;
-    box-shadow: 0 2px 8px rgba(124,58,237,.35);
+    box-shadow: 0 2px 8px rgba(249,115,22,.35);
 }
 
 /* ── Chat panel ── */
@@ -206,7 +236,7 @@ button:active { opacity: .85; transform: scale(.97); }
     display: flex;
     flex-direction: column;
     gap: 5px;
-    background: var(--bg);
+    background: linear-gradient(175deg, var(--bg) 0%, var(--active-contact) 50%, var(--bg) 100%);
 }
 .message {
     max-width: 72%;
@@ -223,7 +253,7 @@ button:active { opacity: .85; transform: scale(.97); }
     margin-left: auto;
     align-items: flex-end;
     border-bottom-right-radius: 5px;
-    box-shadow: 0 4px 16px rgba(124,58,237,.25);
+    box-shadow: 0 4px 16px rgba(249,115,22,.28);
 }
 .them {
     background: var(--them-bg);
@@ -236,6 +266,11 @@ button:active { opacity: .85; transform: scale(.97); }
 .me .msg-ticks.read { color: #bfdbfe; }
 .me .msg-edited { color: rgba(255,255,255,.6); }
 .msg-text { line-height: 1.45; }
+#connStatus { display: none; position: fixed; top: 0; left: 0; right: 0; z-index: 2000; background: var(--accent); color: #fff; font-size: 13px; padding: 6px; justify-content: center; align-items: center; gap: 8px; animation: connPulse 1.5s infinite; }
+@keyframes connPulse { 0%,100% { opacity: .85; } 50% { opacity: 1; } }
+.day-separator { text-align: center; font-size: 12px; color: var(--text2); padding: 8px 0; position: relative; display: flex; align-items: center; gap: 12px; margin: 8px 0; }
+.day-separator::before, .day-separator::after { content: ""; flex: 1; height: 1px; background: var(--border); }
+
 .msg-time { font-size: 10px; color: var(--text2); white-space: nowrap; }
 .msg-media img, .msg-media video { max-width: 260px; max-height: 200px; border-radius: 12px; display: block; }
 .msg-media audio { width: 220px; }
@@ -304,7 +339,7 @@ button:active { opacity: .85; transform: scale(.97); }
     border-radius: 50%;
     object-fit: cover;
     border: 3px solid var(--accent);
-    box-shadow: 0 4px 24px rgba(124,58,237,.4);
+    box-shadow: 0 4px 24px rgba(249,115,22,.35);
     z-index: 50;
     background: #000;
 }
@@ -315,14 +350,14 @@ button:active { opacity: .85; transform: scale(.97); }
 
 /* ── Logout / theme btn ── */
 #logoutBtn { font-size: 12px; padding: 5px 11px; border-radius: 10px; }
-#themeBtn { font-size: 16px; padding: 5px 8px; background: transparent; color: var(--text2); border-radius: 10px; }
-#themeBtn:hover { background: var(--hover); }
+#themeBtn, #authThemeBtn { font-size: 16px; padding: 6px 9px; background: transparent; color: var(--text2); border-radius: 10px; }
+#themeBtn:hover, #authThemeBtn:hover { background: var(--hover); }
 .sidebar-actions { display: flex; gap: 4px; align-items: center; }
 
 /* ── callBox — флоатер (свёрнутый звонок) ── */
 .callBox {
     position: fixed; bottom: 24px; right: 24px;
-    background: #1a1033; color: #fff;
+    background: #2a1b0c; color: #fff;
     border-radius: 20px;
     box-shadow: 0 8px 32px rgba(0,0,0,.5);
     display: none; flex-direction: column;
@@ -485,7 +520,11 @@ button:active { opacity: .85; transform: scale(.97); }
 .vcall-btn:active { transform: scale(.92); opacity: .85; }
 #vcallMicBtn  { background: rgba(255,255,255,.18); color: #fff; }
 #vcallCamBtn  { background: rgba(255,255,255,.18); color: #fff; }
-#vcallEndBtn  { background: #ef4444; color: #fff; width: 64px; height: 64px; font-size: 24px; }
+#vcallEndBtn  { background: #ef4444; color: #fff; }
+.vcall-icon { width: 30px; height: 30px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; pointer-events: none; }
+.vcall-btn .icon-btn-svg, .vcall-btn svg.icon-btn-svg { width: 30px !important; height: 30px !important; }
+#vcallScreenBtn, #gcallScreenBtn { background: rgba(255,255,255,.18); color: #fff; }
+.contact-group-icon { width: 14px; height: 14px; stroke: var(--text2); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
 #vcallMicBtn.muted  { background: rgba(239,68,68,.7); }
 #vcallCamBtn.off    { background: rgba(239,68,68,.7); }
 .video-no-cam {
@@ -525,7 +564,7 @@ button:active { opacity: .85; transform: scale(.97); }
     background: #0a0a14;
     border-radius: 20px;
     box-shadow: 0 24px 80px rgba(0,0,0,.75);
-    border: 1.5px solid rgba(124,58,237,.5);
+    border: 1.5px solid rgba(249,115,22,.45);
     display: none;
     flex-direction: column;
     overflow: hidden;
@@ -566,7 +605,7 @@ button:active { opacity: .85; transform: scale(.97); }
     flex: 0 0 auto !important;
     width: min(100%, 700px) !important;
     height: min(60vh, 440px) !important;
-    border: 2px solid #7c3aed;
+    border: 2px solid #f97316;
     cursor: zoom-in;
 }
 .gcall-tile.screen-share.expanded {
@@ -625,7 +664,7 @@ button:active { opacity: .85; transform: scale(.97); }
 #msgCtxMenu {
     position: fixed; background: var(--panel); border-radius: 16px;
     box-shadow: 0 8px 32px var(--shadow);
-    padding: 6px 0; z-index: 600; display: none; min-width: 170px;
+    padding: 6px 0; z-index: 600; display: none; min-width: 170px; max-width: calc(100vw - 16px);
     border: 1.5px solid var(--border);
 }
 #msgCtxMenu button {
@@ -739,14 +778,32 @@ button:active { opacity: .85; transform: scale(.97); }
 
 /* ── Emoji reaction picker ── */
 .reaction-picker {
-    display: flex; gap: 4px; padding: 8px 12px 6px;
-    flex-wrap: wrap; max-width: 230px;
+    display: flex; align-items: center; gap: 2px; padding: 6px 8px 4px;
 }
-.reaction-picker button {
+.reaction-quick { display: flex; gap: 2px; }
+.reaction-quick button, .reaction-expand-btn {
     font-size: 20px; padding: 4px 6px; border-radius: 10px;
-    background: none; line-height: 1;
+    background: none; line-height: 1; cursor: pointer; border: none; color: var(--text);
 }
-.reaction-picker button:hover { background: var(--hover); transform: scale(1.2); }
+.reaction-quick button:hover, .reaction-expand-btn:hover { background: var(--hover); transform: scale(1.2); }
+.reaction-expand-btn { font-size: 14px; color: var(--text2); transition: transform .15s; }
+.reaction-expand-btn.open { transform: rotate(180deg); }
+.reaction-full {
+    padding: 4px 8px 8px; max-height: 200px; display: flex; flex-direction: column; gap: 6px;
+}
+.reaction-search {
+    width: 100%; padding: 5px 10px; border-radius: 8px; border: 1px solid var(--border);
+    background: var(--bg); color: var(--text); font-size: 13px; outline: none;
+}
+.reaction-grid {
+    display: grid; grid-template-columns: repeat(8, 1fr); gap: 2px;
+    overflow-y: auto; max-height: 160px;
+}
+.reaction-grid button {
+    font-size: 20px; padding: 4px; border-radius: 8px;
+    background: none; border: none; cursor: pointer; line-height: 1;
+}
+.reaction-grid button:hover { background: var(--hover); transform: scale(1.15); }
 
 /* ── Reactions row under message ── */
 .msg-reactions {
@@ -800,6 +857,28 @@ button:active { opacity: .85; transform: scale(.97); }
 #groupModalError { color: #ef4444; font-size: 12px; min-height: 16px; }
 .group-modal-btns { display: flex; gap: 10px; justify-content: flex-end; }
 
+/* ── Group members modal ── */
+#groupMembersViewModal {
+    position: fixed; inset: 0; background: rgba(0,0,0,.5);
+    display: none; align-items: center; justify-content: center; z-index: 850;
+}
+#groupMembersViewBox {
+    background: var(--panel); border-radius: 22px; padding: 24px 22px;
+    box-shadow: 0 16px 48px var(--shadow); width: min(420px, 94vw);
+    border: 1.5px solid var(--border);
+    display: flex; flex-direction: column; gap: 12px;
+}
+#groupMembersViewTitle { margin: 0; font-size: 1.05rem; font-weight: 700; }
+#groupMembersViewList { display: flex; flex-direction: column; gap: 8px; max-height: 340px; overflow-y: auto; }
+.group-view-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 10px; border-radius: 12px;
+    border: 1.5px solid var(--border); background: var(--hover);
+}
+.group-view-row .avatar { width: 32px; height: 32px; font-size: 12px; }
+.group-view-name { font-size: 13px; font-weight: 600; }
+.group-view-role { margin-left: auto; font-size: 11px; color: var(--text2); }
+.group-view-actions { display: flex; justify-content: flex-end; gap: 8px; }
 /* ── Group badge in contacts ── */
 .contact-group-icon { font-size: 11px; color: var(--text2); margin-right: 3px; }
 
@@ -825,7 +904,7 @@ button:active { opacity: .85; transform: scale(.97); }
     gap: 12px; padding: 0 16px; overflow: hidden;
 }
 .gcall-tile {
-    background: #1a1138; border-radius: 18px;
+    background: #2f1e10; border-radius: 18px;
     display: flex; flex-direction: column;
     align-items: center; justify-content: center;
     gap: 10px; position: relative; overflow: hidden;
@@ -880,7 +959,7 @@ button:active { opacity: .85; transform: scale(.97); }
 .gcall-tile.expanded video.gcall-video { border-radius: 0; object-fit: contain; }
 .gcall-tile.expanded .gcall-nick-overlay { font-size: 15px; bottom: 16px; left: 18px; }
 /* кнопка демонстрации экрана — активна */
-.vcall-btn.screen-active { background: rgba(124,58,237,.7) !important; color: #fff !important; }
+.vcall-btn.screen-active { background: rgba(249,115,22,.75) !important; color: #fff !important; }
 /* ЛС демонстрация — remoteVideo contain */
 #videoCallOverlay.screen-mode #remoteVideo { object-fit: contain; }
 /* gcall-grid адаптивный */
@@ -1021,13 +1100,15 @@ button:active { opacity: .85; transform: scale(.97); }
 }
 .avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
 .avatar-sm { width: 32px; height: 32px; font-size: 13px; }
+.avatar-wrap { position: relative; flex-shrink: 0; }
+.online-dot { position: absolute; bottom: 0; right: 0; width: 10px; height: 10px; background: #10b981; border-radius: 50%; border: 2px solid var(--panel); }
 .avatar-lg { width: 52px; height: 52px; font-size: 20px; }
 .avatar-own {
     cursor: pointer;
     border: 2px solid transparent;
     transition: border-color .2s, box-shadow .2s;
 }
-.avatar-own:hover { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(124,58,237,.18); }
+.avatar-own:hover { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(249,115,22,.18); }
 
 /* ── Profile modal ── */
 #profileModal {
@@ -1065,7 +1146,7 @@ button:active { opacity: .85; transform: scale(.97); }
     font-size: 14px; font-family: inherit; line-height: 1.5;
     outline: none; transition: border-color .15s;
 }
-#profileBioInput:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(124,58,237,.12); }
+#profileBioInput:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(249,115,22,.18); }
 
 /* ── Sidebar top with avatar ── */
 .sidebar-top-left { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
@@ -1082,14 +1163,24 @@ button:active { opacity: .85; transform: scale(.97); }
 <div id="authOverlay">
   <div id="authBox">
     <div class="auth-theme-row">
-      <button id="authThemeBtn" title="Сменить тему">#themeBtn</button>
+      <button id="authThemeBtn" class="btn-icon icon-only" title="Сменить тему" aria-label="Сменить тему"></button>
     </div>
     <h2 id="authTitle">Вход</h2>
-    <input id="authNick" placeholder="Ник" autocomplete="username">
-    <input id="authPassword" type="password" placeholder="Пароль" autocomplete="current-password">
-    <div id="authError"></div>
-    <button class="btn-primary" id="authSubmit">Войти</button>
-    <div id="authSwitch">Нет аккаунта? <a id="authToggle">Зарегистрироваться</a></div>
+    <div id="authStep1">
+      <input id="authNick" placeholder="Ник" autocomplete="username">
+      <input id="authEmail" type="email" placeholder="Email" autocomplete="email" style="display:none">
+      <input id="authPassword" type="password" placeholder="Пароль" autocomplete="current-password">
+      <div id="authError"></div>
+      <button class="btn-primary" id="authSubmit">Войти</button>
+      <div id="authSwitch">Нет аккаунта? <a id="authToggle">Зарегистрироваться</a></div>
+    </div>
+    <div id="authStep2" style="display:none">
+      <p style="font-size:14px;color:var(--text2);margin:0">Введите 6-значный код, отправленный на ваш email</p>
+      <input id="authCode" placeholder="Код подтверждения" maxlength="6" autocomplete="one-time-code">
+      <div id="codeError" style="color:#ef4444;font-size:13px;min-height:18px"></div>
+      <button class="btn-primary" id="codeSubmit">Подтвердить</button>
+      <div style="font-size:13px;text-align:center;color:var(--text2)"><a id="codeBack" style="color:var(--accent);cursor:pointer;text-decoration:underline">Назад</a></div>
+    </div>
   </div>
 </div>
 
@@ -1104,8 +1195,8 @@ button:active { opacity: .85; transform: scale(.97); }
         <span id="myNickLabel">—</span>
       </div>
       <div class="sidebar-actions">
-        <button id="newGroupBtn" title="Создать группу">👥</button>
-        <button id="themeBtn" title="Тема">🌙</button>
+        <button id="newGroupBtn" class="btn-icon icon-only" title="Создать группу" aria-label="Создать группу"><svg class="icon-btn-svg" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></button>
+        <button id="themeBtn" class="btn-icon icon-only" title="Тема" aria-label="Сменить тему"></button>
         <button class="btn-danger btn-icon" id="logoutBtn" title="Выйти">⏻</button>
       </div>
     </div>
@@ -1124,9 +1215,10 @@ button:active { opacity: .85; transform: scale(.97); }
         <div class="avatar avatar-sm" id="chatAvatar" style="display:none"></div>
         <span class="top-title" id="chatHeader">Выберите чат<span id="typingIndicator"></span><span id="lastSeenLabel"></span></span>
       </div>
-      <button class="btn-icon" id="addMemberBtn" title="Добавить участника" style="display:none">➕</button>
-      <button class="btn-icon" id="callBtn" title="Аудиозвонок">📞</button>
-      <button class="btn-icon" id="videoCallBtn" title="Видеозвонок" style="display:none">🎥</button>
+      <button class="btn-icon icon-only" id="groupMembersBtn" title="Участники группы" style="display:none" aria-label="Участники группы"><svg class="icon-btn-svg" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></button>
+      <button class="btn-icon icon-only" id="addMemberBtn" title="Добавить участника" style="display:none" aria-label="Добавить участника"><svg class="icon-btn-svg" viewBox="0 0 24 24"><path d="M12 5v14"/><path d="M5 12h14"/></svg></button>
+      <button class="btn-icon icon-only" id="callBtn" title="Аудиозвонок" aria-label="Аудиозвонок"><svg class="icon-btn-svg" viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.2 1.7a15 15 0 0 0 4.8 4.8L15.3 13l5 2v4a2 2 0 0 1-2.2 2A16.8 16.8 0 0 1 3 5.9 2 2 0 0 1 5 4z"></path></svg></button>
+      <button class="btn-icon icon-only" id="videoCallBtn" title="Видеозвонок" style="display:none" aria-label="Видеозвонок"><svg class="icon-btn-svg" viewBox="0 0 24 24"><rect x="3" y="6" width="13" height="12" rx="2"></rect><path d="M16 10l5-3v10l-5-3z"></path></svg></button>
     </div>
     <div class="messages" id="messages"></div>
     <div id="replyBar">
@@ -1142,9 +1234,9 @@ button:active { opacity: .85; transform: scale(.97); }
     </div>
     <div class="composer">
       <input id="messageInput" placeholder="Сообщение">
-      <button class="btn-icon" id="attachBtn" title="Файл">📎</button>
+      <button class="btn-icon icon-only" id="attachBtn" title="Файл" aria-label="Вложение"><svg class="icon-btn-svg" viewBox="0 0 24 24"><path d="M20.5 11.5l-8 8a5 5 0 0 1-7-7l8.5-8.5a3.5 3.5 0 1 1 5 5L9 19a2 2 0 1 1-2.8-2.8l8-8"></path></svg></button>
       <input type="file" id="fileInput" accept="image/*,video/*,audio/*">
-      <button class="btn-icon" id="voiceBtn" title="Тап — сменить режим, зажать — записать">🎤</button>
+      <button class="btn-icon icon-only" id="voiceBtn" title="Тап — сменить режим, зажать — записать" aria-label="Голос или видео сообщение"></button>
       <button class="btn-primary" id="sendBtn">↑</button>
       <!-- панель активной записи -->
       <div id="recordingBar">
@@ -1202,6 +1294,14 @@ button:active { opacity: .85; transform: scale(.97); }
 <div id="groupModal">
   <div id="groupBox">
     <h3>Новая группа</h3>
+    <div style="display:flex;align-items:center;gap:12px">
+      <div class="avatar avatar-lg" id="groupAvatarPreview">👥</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <button class="btn-primary" id="groupAvatarUploadBtn" style="font-size:13px;padding:7px 12px">Загрузить аватар</button>
+        <button id="groupAvatarRemoveBtn" style="font-size:13px;color:var(--text2)">Удалить</button>
+        <input type="file" id="groupAvatarFile" accept="image/*" style="display:none">
+      </div>
+    </div>
     <input id="groupNameInput" placeholder="Название группы (макс. 64 символа)">
     <div style="display:flex;gap:6px">
       <input id="groupMemberInput" placeholder="Добавить участника по нику" style="flex:1">
@@ -1231,6 +1331,22 @@ button:active { opacity: .85; transform: scale(.97); }
   </div>
 </div>
 
+<!-- Group members list modal -->
+<div id="groupMembersViewModal">
+  <div id="groupMembersViewBox">
+    <h3 id="groupMembersViewTitle">Участники группы</h3>
+    <div id="groupMembersViewList"></div>
+    <div class="group-view-actions" style="justify-content:space-between;align-items:center">
+      <div style="display:flex;gap:8px">
+        <button class="btn-primary" id="groupMembersAvatarUploadBtn" style="font-size:13px;padding:7px 12px">Аватар</button>
+        <button id="groupMembersAvatarRemoveBtn" style="font-size:13px;color:var(--text2)">Убрать</button>
+        <input type="file" id="groupMembersAvatarFile" accept="image/*" style="display:none">
+      </div>
+      <button id="groupMembersViewCloseBtn">Закрыть</button>
+    </div>
+  </div>
+</div>
+
 <!-- Active audio call (mini floater) -->
 <div class="callBox" id="callBox" style="display:none">
   <video id="floatLocalVideo" autoplay playsinline muted></video>
@@ -1243,7 +1359,7 @@ button:active { opacity: .85; transform: scale(.97); }
   </div>
   <div class="callBox-btns">
     <button id="callExpandBtn" title="Развернуть">⤢ Открыть</button>
-    <button id="callMicBtn">🎤</button>
+    <button id="callMicBtn" aria-label="Микрофон"></button>
     <button id="endCall">📵</button>
   </div>
 </div>
@@ -1267,10 +1383,10 @@ button:active { opacity: .85; transform: scale(.97); }
       <button class="vcall-btn" id="vcallMinimizeBtn" title="Свернуть">⊟</button>
     </div>
     <div class="video-bottom-bar">
-      <button class="vcall-btn" id="vcallMicBtn"   title="Микрофон">🎤</button>
-      <button class="vcall-btn" id="vcallCamBtn"   title="Камера">📷</button>
-      <button class="vcall-btn" id="vcallScreenBtn" title="Демонстрация экрана">🖥️</button>
-      <button class="vcall-btn" id="vcallEndBtn"   title="Завершить">📵</button>
+      <button class="vcall-btn" id="vcallMicBtn"   title="Микрофон" aria-label="Микрофон"></button>
+      <button class="vcall-btn" id="vcallCamBtn"   title="Камера" aria-label="Камера"></button>
+      <button class="vcall-btn" id="vcallScreenBtn" title="Демонстрация экрана"><svg class="vcall-icon" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg></button>
+      <button class="vcall-btn" id="vcallEndBtn" title="Завершить"><svg class="vcall-icon" viewBox="0 0 24 24"><path d="M10.68 13.31a16 16 0 0 0 3.41 2.6l1.27-1.27a2 2 0 0 1 2.11-.45 12.8 12.8 0 0 0 4 .64 2 2 0 0 1 2 2v3.2a2 2 0 0 1-2.18 2A19.79 19.79 0 0 1 2.18 2.18 2 2 0 0 1 4 0h3.2a2 2 0 0 1 2 2 12.8 12.8 0 0 0 .64 4 2 2 0 0 1-.45 2.11z" transform="translate(.5 1) scale(.88)"/><path d="M2 22L22 2" stroke-width="2.2"/></svg></button>
     </div>
   </div>
 </div>
@@ -1293,8 +1409,8 @@ button:active { opacity: .85; transform: scale(.97); }
     <div class="caller" id="incomingCaller"></div>
     <div class="sub" id="incomingCallType">Входящий звонок...</div>
     <div class="call-btns">
-      <button id="acceptAudio">🎤 Аудио</button>
-      <button id="acceptVideo">🎥 Видео</button>
+      <button id="acceptAudio" class="btn-with-icon" aria-label="Принять аудио"></button>
+      <button id="acceptVideo" class="btn-with-icon" aria-label="Принять видео"></button>
       <button id="rejectCall">📵 Отклонить</button>
     </div>
   </div>
@@ -1307,7 +1423,7 @@ button:active { opacity: .85; transform: scale(.97); }
     <div class="caller" id="incomingGroupName">Групповой звонок</div>
     <div class="sub" id="incomingGroupCaller"></div>
     <div class="call-btns">
-      <button id="acceptGroupCall">🎤 Присоединиться</button>
+      <button id="acceptGroupCall" class="btn-with-icon" aria-label="Присоединиться"></button>
       <button id="rejectGroupCall">📵 Отклонить</button>
     </div>
   </div>
@@ -1322,24 +1438,22 @@ button:active { opacity: .85; transform: scale(.97); }
   </div>
   <div class="gcall-grid" id="gcallGrid"></div>
   <div class="gcall-bottom-bar">
-    <button class="vcall-btn" id="gcallMicBtn"    title="Микрофон">🎤</button>
-    <button class="vcall-btn" id="gcallCamBtn"    title="Камера">📷</button>
-    <button class="vcall-btn" id="gcallScreenBtn" title="Демонстрация экрана">🖥️</button>
-    <button class="vcall-btn" id="gcallEndBtn"    title="Завершить" style="background:#ef4444;color:#fff;width:64px;height:64px;font-size:24px;">📵</button>
+    <button class="vcall-btn" id="gcallMicBtn"    title="Микрофон" aria-label="Микрофон"></button>
+    <button class="vcall-btn" id="gcallCamBtn"    title="Камера" aria-label="Камера"></button>
+    <button class="vcall-btn" id="gcallScreenBtn" title="Демонстрация экрана"><svg class="vcall-icon" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg></button>
+    <button class="vcall-btn" id="gcallEndBtn" title="Завершить" style="background:#ef4444;color:#fff;"><svg class="vcall-icon" viewBox="0 0 24 24"><path d="M10.68 13.31a16 16 0 0 0 3.41 2.6l1.27-1.27a2 2 0 0 1 2.11-.45 12.8 12.8 0 0 0 4 .64 2 2 0 0 1 2 2v3.2a2 2 0 0 1-2.18 2A19.79 19.79 0 0 1 2.18 2.18 2 2 0 0 1 4 0h3.2a2 2 0 0 1 2 2 12.8 12.8 0 0 0 .64 4 2 2 0 0 1-.45 2.11z" transform="translate(.5 1) scale(.88)"/><path d="M2 22L22 2" stroke-width="2.2"/></svg></button>
   </div>
 </div>
 
 <!-- Message context menu -->
 <div id="msgCtxMenu">
   <div class="reaction-picker" id="reactionPicker">
-    <button data-emoji="👍">👍</button>
-    <button data-emoji="❤️">❤️</button>
-    <button data-emoji="😂">😂</button>
-    <button data-emoji="😮">😮</button>
-    <button data-emoji="😢">😢</button>
-    <button data-emoji="🔥">🔥</button>
-    <button data-emoji="👎">👎</button>
-    <button data-emoji="🎉">🎉</button>
+    <div class="reaction-quick" id="reactionQuick"></div>
+    <button class="reaction-expand-btn" id="reactionExpandBtn" title="Все эмодзи">▾</button>
+  </div>
+  <div class="reaction-full" id="reactionFull" style="display:none">
+    <input class="reaction-search" id="reactionSearch" placeholder="Поиск..." autocomplete="off">
+    <div class="reaction-grid" id="reactionGrid"></div>
   </div>
   <div style="height:1px;background:var(--border);margin:2px 0"></div>
   <button id="msgCtxReply">Ответить</button>
@@ -1368,19 +1482,45 @@ button:active { opacity: .85; transform: scale(.97); }
 </div>
 
 <audio id="msgSound" src="message.mp3" preload="auto"></audio>
+<audio id="sendSound" src="message_1.mp3" preload="auto"></audio>
 <audio id="callSound" src="call.mp3" preload="auto" loop></audio>
 
 <script>
+const ICONS = {
+    moon: '<svg class="icon-btn-svg" viewBox="0 0 24 24"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"></path></svg>',
+    sun: '<svg class="icon-btn-svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="M4.9 4.9l1.4 1.4"></path><path d="M17.7 17.7l1.4 1.4"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="M4.9 19.1l1.4-1.4"></path><path d="M17.7 6.3l1.4-1.4"></path></svg>',
+    mic: '<svg class="icon-btn-svg" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"></rect><path d="M6 10v1a6 6 0 0 0 12 0v-1"></path><path d="M12 17v4"></path><path d="M9 21h6"></path></svg>',
+    micOff: '<svg class="icon-btn-svg" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"></rect><path d="M6 10v1a6 6 0 0 0 6 6"></path><path d="M12 17v4"></path><path d="M9 21h6"></path><path d="M4 4l16 16"></path></svg>',
+    cam: '<svg class="icon-btn-svg" viewBox="0 0 24 24"><rect x="3" y="7" width="13" height="10" rx="2"></rect><circle cx="9.5" cy="12" r="2.4"></circle><path d="M16 10l5-3v10l-5-3z"></path></svg>',
+    camOff: '<svg class="icon-btn-svg" viewBox="0 0 24 24"><rect x="3" y="7" width="13" height="10" rx="2"></rect><path d="M16 10l5-3v10l-5-3z"></path><path d="M4 4l16 16"></path></svg>',
+    video: '<svg class="icon-btn-svg" viewBox="0 0 24 24"><rect x="3" y="6" width="13" height="12" rx="2"></rect><path d="M16 10l5-3v10l-5-3z"></path></svg>',
+    attach: '<svg class="icon-btn-svg" viewBox="0 0 24 24"><path d="M20.5 11.5l-8 8a5 5 0 0 1-7-7l8.5-8.5a3.5 3.5 0 1 1 5 5L9 19a2 2 0 1 1-2.8-2.8l8-8"></path></svg>',
+    phone: '<svg class="icon-btn-svg" viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.2 1.7a15 15 0 0 0 4.8 4.8L15.3 13l5 2v4a2 2 0 0 1-2.2 2A16.8 16.8 0 0 1 3 5.9 2 2 0 0 1 5 4z"></path></svg>'
+};
+function setIcon(el, name) { if (el) el.innerHTML = ICONS[name] || ''; }
+function setButtonWithText(el, name, label) { if (el) el.innerHTML = (ICONS[name] || '') + '<span>' + label + '</span>'; }
+
 // ── Тема ──────────────────────────────────────────────────────────────────
 let theme = localStorage.getItem("theme") || "light";
 function applyTheme(t) {
     theme = t;
     document.documentElement.setAttribute("data-theme", t);
     localStorage.setItem("theme", t);
-    const icon = t === "dark" ? "☀️" : "🌙";
-    document.querySelectorAll("#themeBtn, #authThemeBtn").forEach(b => b.textContent = icon);
+    const icon = t === "dark" ? "sun" : "moon";
+    document.querySelectorAll("#themeBtn, #authThemeBtn").forEach(b => setIcon(b, icon));
 }
 applyTheme(theme);
+setIcon(document.getElementById("callBtn"), "phone");
+setIcon(document.getElementById("videoCallBtn"), "video");
+setIcon(document.getElementById("attachBtn"), "attach");
+setIcon(document.getElementById("callMicBtn"), "mic");
+setIcon(document.getElementById("vcallMicBtn"), "mic");
+setIcon(document.getElementById("vcallCamBtn"), "cam");
+setIcon(document.getElementById("gcallMicBtn"), "mic");
+setIcon(document.getElementById("gcallCamBtn"), "cam");
+setButtonWithText(document.getElementById("acceptAudio"), "mic", "Аудио");
+setButtonWithText(document.getElementById("acceptVideo"), "video", "Видео");
+setButtonWithText(document.getElementById("acceptGroupCall"), "mic", "Присоединиться");
 document.getElementById("themeBtn").onclick = () => applyTheme(theme === "dark" ? "light" : "dark");
 document.getElementById("authThemeBtn").onclick = () => applyTheme(theme === "dark" ? "light" : "dark");
 
@@ -1405,12 +1545,31 @@ let pendingOffer = null;
 const typingTimers = {};
 let myTypingTimer = null, myTypingActive = false;
 
-function save() { localStorage.setItem("messenger_state", JSON.stringify(state)); }
+function save() {
+    try { localStorage.setItem("messenger_state", JSON.stringify(state)); }
+    catch (e) { console.warn("save() failed, pruning mediaData...", e); pruneMediaData(); try { localStorage.setItem("messenger_state", JSON.stringify(state)); } catch {} }
+}
+function pruneMediaData() {
+    for (const key in state.conversations) {
+        const conv = state.conversations[key];
+        for (let i = 0; i < conv.length; i++) {
+            if (conv[i].mediaData && conv[i].mediaData.length > 50000) {
+                conv[i].mediaData = "";
+                conv[i].mediaPruned = true;
+            }
+        }
+    }
+}
 
 // ── Аватарки ───────────────────────────────────────────────────────────────
 // Хранятся в localStorage под ключом "avatars" = { nick: dataURL }
 let avatars = JSON.parse(localStorage.getItem("avatars") || "{}");
 function saveAvatars() { localStorage.setItem("avatars", JSON.stringify(avatars)); }
+
+let groupAvatars = JSON.parse(localStorage.getItem("group_avatars") || "{}");
+function saveGroupAvatars() { localStorage.setItem("group_avatars", JSON.stringify(groupAvatars)); }
+Object.values(state.groups).forEach(g => { if (g && g.avatar) groupAvatars[g.id] = g.avatar; });
+saveGroupAvatars();
 
 // Описания профилей: { nick: "текст" }
 let bios = JSON.parse(localStorage.getItem("bios") || "{}");
@@ -1423,8 +1582,15 @@ function nickInitial(nick) { return (nick || "?")[0].toUpperCase(); }
 function renderAvatar(el, nick, isGroup) {
     el.innerHTML = "";
     if (isGroup) {
-        el.textContent = "👥";
-        el.style.fontSize = "";
+        const src = groupAvatars[nick];
+        if (src) {
+            const img = document.createElement("img");
+            img.src = src;
+            el.appendChild(img);
+        } else {
+            const gName = (state.groups[nick] && state.groups[nick].name) || nick;
+            el.textContent = nickInitial(gName);
+        }
         return;
     }
     const src = avatars[nick];
@@ -1450,10 +1616,10 @@ function updateChatAvatar(key, isGroup) {
     if (!el) return;
     if (!key) { el.style.display = "none"; el.onclick = null; return; }
     el.style.display = "flex";
-    el.style.cursor = isGroup ? "default" : "pointer";
-    el.title = isGroup ? "" : "Посмотреть профиль";
-    el.onclick = (!isGroup) ? () => openUserProfile(key) : null;
-    renderAvatar(el, isGroup ? null : key, isGroup);
+    el.style.cursor = isGroup ? "pointer" : "pointer";
+    el.title = isGroup ? "Участники группы" : "Посмотреть профиль";
+    el.onclick = isGroup ? () => openGroupMembersModal(key) : () => openUserProfile(key);
+    renderAvatar(el, key, isGroup);
 }
 
 // ── Профиль модал ──────────────────────────────────────────────────────────
@@ -1620,6 +1786,7 @@ const messagesEl    = document.getElementById("messages");
 const chatHeader    = document.getElementById("chatHeader");
 const typingIndicator = document.getElementById("typingIndicator");
 const msgSound      = document.getElementById("msgSound");
+const sendSound     = document.getElementById("sendSound");
 const callBox       = document.getElementById("callBox");
 const authOverlay   = document.getElementById("authOverlay");
 const appDiv        = document.getElementById("appDiv");
@@ -1639,11 +1806,27 @@ const lastSeenLabel = document.getElementById("lastSeenLabel");
 // ── Утилиты ───────────────────────────────────────────────────────────────
 function formatTime(ts) {
     if (!ts) return "";
+    const d = new Date(ts);
+    const pad = n => String(n).padStart(2, "0");
+    return pad(d.getHours()) + ":" + pad(d.getMinutes());
+}
+
+function formatDateLabel(ts) {
     const d = new Date(ts), now = new Date();
     const pad = n => String(n).padStart(2, "0");
-    const time = pad(d.getHours()) + ":" + pad(d.getMinutes());
-    if (d.toDateString() === now.toDateString()) return time;
-    return pad(d.getDate()) + "." + pad(d.getMonth() + 1) + " " + time;
+    if (d.toDateString() === now.toDateString()) return "Сегодня";
+    const yesterday = new Date(now); yesterday.setDate(now.getDate() - 1);
+    if (d.toDateString() === yesterday.toDateString()) return "Вчера";
+    const months = ["января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"];
+    const label = d.getDate() + " " + months[d.getMonth()];
+    return d.getFullYear() === now.getFullYear() ? label : label + " " + d.getFullYear();
+}
+
+function createDaySeparator(ts) {
+    const el = document.createElement("div");
+    el.className = "day-separator";
+    el.textContent = formatDateLabel(ts);
+    return el;
 }
 
 function formatLastSeen(ts) {
@@ -1659,8 +1842,18 @@ function formatLastSeen(ts) {
 }
 
 function updateLastSeenLabel() {
-    if (!active || active.startsWith("g_")) { lastSeenLabel.textContent = ""; return; }
-    if (state.online[active]) { lastSeenLabel.textContent = ""; return; }
+    lastSeenLabel.style.color = "";
+    if (!active) { lastSeenLabel.textContent = ""; return; }
+    if (active.startsWith("g_")) {
+        const g = state.groups[active];
+        if (g && g.members) {
+            const n = g.members.length;
+            const w = n % 10 === 1 && n % 100 !== 11 ? "участник" : (n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20)) ? "участника" : "участников";
+            lastSeenLabel.textContent = n + " " + w;
+        } else { lastSeenLabel.textContent = ""; }
+        return;
+    }
+    if (state.online[active]) { lastSeenLabel.textContent = "в сети"; lastSeenLabel.style.color = "#10b981"; return; }
     const ts = state.lastSeen[active];
     lastSeenLabel.textContent = ts ? formatLastSeen(ts) : "";
 }
@@ -1866,31 +2059,116 @@ function renderContacts() {
         d.className = "contact" + (key === active ? " active-contact" : "");
 
         // Аватарка
+        const avaWrap = document.createElement("div");
+        avaWrap.className = "avatar-wrap";
         const ava = document.createElement("div");
         ava.className = "avatar avatar-sm";
-        renderAvatar(ava, isGroup ? null : key, isGroup);
+        renderAvatar(ava, key, isGroup);
+        avaWrap.appendChild(ava);
+        if (!isGroup && state.online[key]) {
+            const dot = document.createElement("div");
+            dot.className = "online-dot";
+            avaWrap.appendChild(dot);
+        }
 
         const left = document.createElement("div");
         left.className = "contact-left";
         const nameEl = document.createElement("div");
         nameEl.className = "contact-name";
         if (isGroup) {
-            nameEl.textContent = state.groups[key].name;
+            const gi = document.createElementNS("http://www.w3.org/2000/svg","svg");
+            gi.setAttribute("class","contact-group-icon");
+            gi.setAttribute("viewBox","0 0 24 24");
+            gi.innerHTML = '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>';
+            nameEl.appendChild(gi);
+            nameEl.appendChild(document.createTextNode(" " + state.groups[key].name));
         } else {
             nameEl.textContent = key;
         }
-        const typingEl = document.createElement("div");
-        typingEl.className = "contact-typing";
-        typingEl.textContent = typingTimers[key] ? "печатает..." : "";
-        left.append(nameEl, typingEl);
+        // Preview of last message or typing indicator
+        const previewEl = document.createElement("div");
+        previewEl.className = "contact-preview";
+        const conv = state.conversations[key] || [];
+        const lastMsg = conv.length ? conv[conv.length - 1] : null;
+        if (typingTimers[key]) {
+            previewEl.style.color = "var(--accent)";
+            previewEl.style.fontStyle = "italic";
+            previewEl.textContent = "печатает...";
+        } else if (lastMsg) {
+            const isMine = lastMsg.from === myName;
+            if (isMine) {
+                const ticks = document.createElement("span");
+                ticks.className = "preview-ticks";
+                if (isGroup) {
+                    const readers = (state.groupReadBy[lastMsg.id] || []);
+                    ticks.textContent = readers.length > 0 ? "✓✓" : "✓";
+                    if (readers.length > 0) ticks.classList.add("read");
+                } else {
+                    const lastRead = state.readStatus[key];
+                    const msgIdx = conv.findIndex(x => x.id === lastMsg.id);
+                    const lastReadIdx = lastRead ? conv.findIndex(x => x.id === lastRead) : -1;
+                    const isRead = lastRead && lastReadIdx >= msgIdx && msgIdx !== -1;
+                    ticks.textContent = isRead ? "✓✓" : "✓";
+                    if (isRead) ticks.classList.add("read");
+                }
+                previewEl.appendChild(ticks);
+            }
+            if (isGroup && lastMsg.from) {
+                const sender = document.createElement("span");
+                sender.className = "preview-sender";
+                sender.textContent = (isMine ? "Вы" : lastMsg.from) + ": ";
+                previewEl.appendChild(sender);
+            }
+            const textSpan = document.createElement("span");
+            textSpan.className = "preview-text";
+            if (lastMsg.deleted) {
+                textSpan.textContent = "Сообщение удалено";
+                textSpan.style.fontStyle = "italic";
+            } else if (lastMsg.callEnd) {
+                const ce = lastMsg.callEnd;
+                if (ce.missed) {
+                    textSpan.textContent = isMine ? "Исходящий звонок" : "Пропущенный звонок";
+                } else {
+                    textSpan.textContent = ce.video ? "Видеозвонок" : "Аудиозвонок";
+                }
+            } else if (lastMsg.text) {
+                textSpan.textContent = lastMsg.text;
+            } else if (lastMsg.mediaType) {
+                const fn = lastMsg.fileName || "";
+                if (fn === "voice.webm") {
+                    textSpan.textContent = "Голосовое сообщение";
+                } else if (fn === "video.webm") {
+                    textSpan.textContent = "Видеосообщение";
+                } else if (lastMsg.mediaType.startsWith("image/")) {
+                    textSpan.textContent = "Фото";
+                } else if (lastMsg.mediaType.startsWith("video/")) {
+                    textSpan.textContent = "Видео";
+                } else if (lastMsg.mediaType.startsWith("audio/")) {
+                    textSpan.textContent = "Аудио";
+                } else {
+                    textSpan.textContent = fn || "Файл";
+                }
+            }
+            previewEl.appendChild(textSpan);
+        }
+        left.append(nameEl, previewEl);
 
         const right = document.createElement("div");
         right.className = "contact-right";
-        if (!isGroup) {
-            const statusEl = document.createElement("span");
-            statusEl.className = state.online[key] ? "status-online" : "status-offline";
-            statusEl.textContent = state.online[key] ? "● online" : "● offline";
-            right.appendChild(statusEl);
+        // Time of last message
+        if (lastMsg && (lastMsg.ts || state.lastMsg[key])) {
+            const timeEl = document.createElement("div");
+            timeEl.className = "contact-time";
+            const ts = lastMsg.ts || state.lastMsg[key];
+            const d = new Date(ts);
+            const now = new Date();
+            const isToday = d.getDate() === now.getDate() && d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+            if (isToday) {
+                timeEl.textContent = d.getHours().toString().padStart(2, "0") + ":" + d.getMinutes().toString().padStart(2, "0");
+            } else {
+                timeEl.textContent = d.getDate().toString().padStart(2, "0") + "." + (d.getMonth() + 1).toString().padStart(2, "0") + "." + d.getFullYear().toString().slice(-2);
+            }
+            right.appendChild(timeEl);
         }
         const unread = state.unread[key] || 0;
         if (unread > 0) {
@@ -1900,7 +2178,7 @@ function renderContacts() {
             right.appendChild(badge);
         }
 
-        d.append(ava, left, right);
+        d.append(avaWrap, left, right);
         d.onclick = () => isGroup ? openGroupChat(key) : openChat(key);
         d.oncontextmenu = e => { e.preventDefault(); showCtxMenu(e.clientX, e.clientY, key, isGroup); };
         // клик по аватарке — просмотр профиля (только для личных контактов)
@@ -1944,6 +2222,7 @@ function openChat(name) {
     typingIndicator.textContent = "";
     document.getElementById("callBtn").style.display = "";
     document.getElementById("videoCallBtn").style.display = "";
+    document.getElementById("groupMembersBtn").style.display = "none";
     document.getElementById("addMemberBtn").style.display = "none";
     updateChatAvatar(name, false);
     renderContacts();
@@ -1960,9 +2239,10 @@ function openGroupChat(gid) {
     const g = state.groups[gid];
     chatHeader.firstChild.textContent = g ? g.name : gid;
     typingIndicator.textContent = "";
-    lastSeenLabel.textContent = "";
+    updateLastSeenLabel();
     document.getElementById("callBtn").style.display = "";
     document.getElementById("videoCallBtn").style.display = "";
+    document.getElementById("groupMembersBtn").style.display = "";
     document.getElementById("addMemberBtn").style.display = "";
     updateChatAvatar(gid, true);
     renderContacts();
@@ -1979,9 +2259,16 @@ function renderMessages() {
     if (!active) return;
     const showSender = isGroupActive();
     const msgs = state.conversations[active] || [];
+    let lastDateStr = "";
     msgs.forEach((m, i) => {
+        if (m.ts) {
+            const dateStr = new Date(m.ts).toDateString();
+            if (dateStr !== lastDateStr) {
+                lastDateStr = dateStr;
+                messagesEl.appendChild(createDaySeparator(m.ts));
+            }
+        }
         const el = renderMessageEl(m, showSender);
-        // staggered анимация при открытии чата — только последние 30 сообщений
         const offset = msgs.length - i;
         if (offset <= 30) {
             el.classList.add("msg-animate");
@@ -1990,14 +2277,28 @@ function renderMessages() {
         messagesEl.appendChild(el);
     });
     messagesEl.classList.remove("messages-animate");
-    void messagesEl.offsetWidth; // reflow
+    void messagesEl.offsetWidth;
     messagesEl.classList.add("messages-animate");
     messagesEl.scrollTop = messagesEl.scrollHeight;
+}
+
+function maybeInsertDaySep(m) {
+    if (!m.ts) return;
+    const dateStr = new Date(m.ts).toDateString();
+    const allMsgs = messagesEl.querySelectorAll(".message");
+    const last = allMsgs.length ? allMsgs[allMsgs.length - 1] : null;
+    if (!last) { messagesEl.appendChild(createDaySeparator(m.ts)); return; }
+    const lastId = last.dataset.id;
+    const conv = state.conversations[active] || [];
+    const prev = [...conv].reverse().find(x => x.id === lastId);
+    const prevDate = prev && prev.ts ? new Date(prev.ts).toDateString() : "";
+    if (dateStr !== prevDate) messagesEl.appendChild(createDaySeparator(m.ts));
 }
 
 function appendMessage(m) {
     const peer = m.from === myName ? m.to : m.from;
     if (active === peer) {
+        maybeInsertDaySep(m);
         const el = renderMessageEl(m, isGroupActive());
         el.classList.add("msg-animate");
         messagesEl.appendChild(el);
@@ -2007,6 +2308,7 @@ function appendMessage(m) {
 
 function appendGroupMessage(m) {
     if (active === m.groupId) {
+        maybeInsertDaySep(m);
         const el = renderMessageEl(m, true);
         el.classList.add("msg-animate");
         messagesEl.appendChild(el);
@@ -2023,10 +2325,14 @@ function sendMsg(msg) {
     if (!state.conversations[msg.to]) state.conversations[msg.to] = [];
     state.conversations[msg.to].push(msg);
     state.lastMsg[msg.to] = msg.ts || Date.now();
-    socket.send(JSON.stringify(msg));
+    try {
+        if (socket && socket.readyState === WebSocket.OPEN) socket.send(JSON.stringify(msg));
+    } catch (e) { console.error("sendMsg socket error:", e); }
     save();
     appendMessage(msg);
     renderContacts();
+    sendSound.currentTime = 0;
+    sendSound.play().catch(() => {});
 }
 
 function sendGroupMsg(msg) {
@@ -2035,10 +2341,14 @@ function sendGroupMsg(msg) {
     if (!state.conversations[gid]) state.conversations[gid] = [];
     state.conversations[gid].push(msg);
     state.lastMsg[gid] = msg.ts || Date.now();
-    socket.send(JSON.stringify(msg));
+    try {
+        if (socket && socket.readyState === WebSocket.OPEN) socket.send(JSON.stringify(msg));
+    } catch (e) { console.error("sendGroupMsg socket error:", e); }
     save();
     appendGroupMessage(msg);
     renderContacts();
+    sendSound.currentTime = 0;
+    sendSound.play().catch(() => {});
 }
 
 // Найти сообщение по id в разговоре с собеседником
@@ -2253,22 +2563,46 @@ function mainMessageHandler(e) {
     if (data.type === "groupList") {
         // Получили список групп при логине
         Object.assign(state.groups, data.groups);
+        Object.values(data.groups || {}).forEach(g => { if (g && g.avatar) groupAvatars[g.id] = g.avatar; });
+        saveGroupAvatars();
         save(); renderContacts();
         return;
     }
 
     if (data.type === "groupCreated") {
         state.groups[data.group.id] = data.group;
+        if (data.group && data.group.avatar) {
+            groupAvatars[data.group.id] = data.group.avatar;
+            saveGroupAvatars();
+        }
         save(); renderContacts();
         return;
     }
 
     if (data.type === "groupMemberAdded") {
         state.groups[data.groupId] = data.group;
+        if (data.group && data.group.avatar) {
+            groupAvatars[data.groupId] = data.group.avatar;
+            saveGroupAvatars();
+        }
         save();
         if (active === data.groupId) chatHeader.firstChild.textContent = data.group.name;
         renderContacts();
         if (typeof _origGroupMemberAdded === "function") _origGroupMemberAdded(data.groupId);
+        return;
+    }
+
+    if (data.type === "groupUpdated") {
+        state.groups[data.groupId] = data.group;
+        if (data.group && data.group.avatar) groupAvatars[data.groupId] = data.group.avatar;
+        else delete groupAvatars[data.groupId];
+        saveGroupAvatars();
+        save();
+        if (active === data.groupId) {
+            chatHeader.firstChild.textContent = data.group.name;
+            updateChatAvatar(data.groupId, true);
+        }
+        renderContacts();
         return;
     }
 
@@ -2419,36 +2753,154 @@ function mainMessageHandler(e) {
 }
 
 // ── Auth ──────────────────────────────────────────────────────────────────
-function connectAndAuth(nick, password) {
-    authError.textContent = "";
-    if (!nick || !password) { authError.textContent = "Заполните все поля"; return; }
-    authSubmit.disabled = true;
+let pendingEmail = "";
+let pendingLoginNick = "";
+const authStep1  = document.getElementById("authStep1");
+const authStep2  = document.getElementById("authStep2");
+const authEmail  = document.getElementById("authEmail");
+const codeError  = document.getElementById("codeError");
+const codeSubmit = document.getElementById("codeSubmit");
+const codeBack   = document.getElementById("codeBack");
+const authCodeInput = document.getElementById("authCode");
+let authNickValue = "";
+let authPwdValue = "";
+let reconnectTimer = null;
+let reconnectDelay = 1000;
 
+function showConnStatus(text) {
+    let el = document.getElementById("connStatus");
+    if (!el) {
+        el = document.createElement("div");
+        el.id = "connStatus";
+        document.body.appendChild(el);
+    }
+    el.textContent = text;
+    el.style.display = "flex";
+}
+function hideConnStatus() {
+    const el = document.getElementById("connStatus");
+    if (el) el.style.display = "none";
+}
+
+function scheduleReconnect() {
+    if (!myName) return; // не залогинен — не переподключаемся
+    showConnStatus("Переподключение...");
+    clearTimeout(reconnectTimer);
+    reconnectTimer = setTimeout(() => {
+        reconnectWS();
+    }, reconnectDelay);
+    reconnectDelay = Math.min(reconnectDelay * 1.5, 15000);
+}
+
+function reconnectWS() {
+    const session = JSON.parse(localStorage.getItem("session") || "null");
+    if (!session) return;
     const wsUrl = (location.protocol === "https:" ? "wss://" : "ws://") + location.host;
     socket = new WebSocket(wsUrl);
 
-    socket.onopen = () => socket.send(JSON.stringify({ type: authMode, nick, password }));
+    socket.onopen = () => {
+        socket.send(JSON.stringify({ type: "login", nick: session.nick, password: session.password }));
+    };
 
     socket.onmessage = e => {
         let data;
         try { data = JSON.parse(e.data); } catch { return; }
+
+        if (data.type === "codeSent") {
+            // login requires code — show auth overlay for code entry
+            hideConnStatus();
+            pendingEmail = data.email || "";
+            pendingLoginNick = data.loginNick || "";
+            authOverlay.style.display = "flex";
+            appDiv.style.display = "none";
+            authStep1.style.display = "none";
+            authStep2.style.display = "";
+            codeError.textContent = "";
+            authCodeInput.value = "";
+            authCodeInput.focus();
+            return;
+        }
+
+        if (data.type !== "authResult") return;
+        if (data.success) {
+            reconnectDelay = 1000;
+            hideConnStatus();
+            socket.onmessage = mainMessageHandler;
+            socket.onclose = () => { scheduleReconnect(); };
+            socket.onerror = () => {};
+            // flush queued messages from server
+        } else {
+            // credentials invalid — clear session and show login
+            localStorage.removeItem("session");
+            hideConnStatus();
+            location.reload();
+        }
+    };
+
+    socket.onerror = () => {
+        scheduleReconnect();
+    };
+    socket.onclose = () => {};
+}
+
+function connectAndAuth(nick, password) {
+    authError.textContent = "";
+    const email = authEmail.value.trim();
+    if (!nick || !password) { authError.textContent = "Заполните все поля"; return; }
+    if (authMode === "register" && !email) { authError.textContent = "Введите email"; return; }
+    authSubmit.disabled = true;
+    authNickValue = nick;
+    authPwdValue = password;
+
+    const wsUrl = (location.protocol === "https:" ? "wss://" : "ws://") + location.host;
+    socket = new WebSocket(wsUrl);
+
+    socket.onopen = () => {
+        if (authMode === "register") {
+            socket.send(JSON.stringify({ type: "register", nick, password, email }));
+        } else {
+            socket.send(JSON.stringify({ type: "login", nick, password }));
+        }
+    };
+
+    socket.onmessage = e => {
+        let data;
+        try { data = JSON.parse(e.data); } catch { return; }
+
+        if (data.type === "codeSent") {
+            pendingEmail = data.email || "";
+            pendingLoginNick = data.loginNick || "";
+            authStep1.style.display = "none";
+            authStep2.style.display = "";
+            codeError.textContent = "";
+            authCodeInput.value = "";
+            authCodeInput.focus();
+            return;
+        }
+
         if (data.type !== "authResult") return;
         if (data.success) {
             myName = data.nick;
-            // сохраняем сессию
             localStorage.setItem("session", JSON.stringify({ nick, password }));
             document.getElementById("myNickLabel").textContent = myName;
             authOverlay.style.display = "none";
             appDiv.style.display = "grid";
             socket.onmessage = mainMessageHandler;
+            socket.onclose = () => { scheduleReconnect(); };
+            socket.onerror = () => {};
+            hideConnStatus();
             updateMyAvatar();
             renderContacts();
             setupNotifications();
         } else {
-            authError.textContent = data.error || "Ошибка";
-            authSubmit.disabled = false;
+            if (authStep2.style.display !== "none") {
+                codeError.textContent = data.error || "Ошибка";
+                codeSubmit.disabled = false;
+            } else {
+                authError.textContent = data.error || "Ошибка";
+                authSubmit.disabled = false;
+            }
             socket.close();
-            // если автовход провалился — убираем сохранённые данные
             localStorage.removeItem("session");
         }
     };
@@ -2459,11 +2911,35 @@ function connectAndAuth(nick, password) {
     };
 }
 
+codeSubmit.onclick = () => {
+    const code = authCodeInput.value.trim();
+    if (!code) { codeError.textContent = "Введите код"; return; }
+    codeSubmit.disabled = true;
+    codeError.textContent = "";
+    if (socket && socket.readyState === WebSocket.OPEN) {
+        if (pendingLoginNick) {
+            socket.send(JSON.stringify({ type: "verifyLoginCode", nick: pendingLoginNick, code }));
+        } else {
+            socket.send(JSON.stringify({ type: "verifyCode", email: pendingEmail, code }));
+        }
+    }
+};
+authCodeInput.addEventListener("keydown", e => { if (e.key === "Enter") codeSubmit.click(); });
+
+codeBack.onclick = () => {
+    authStep2.style.display = "none";
+    authStep1.style.display = "";
+    authSubmit.disabled = false;
+    pendingEmail = "";
+    pendingLoginNick = "";
+    if (socket) socket.close();
+};
+
 authSubmit.onclick = () => connectAndAuth(
     document.getElementById("authNick").value.trim(),
     document.getElementById("authPassword").value
 );
-["authNick","authPassword"].forEach(id =>
+["authNick","authPassword","authEmail"].forEach(id =>
     document.getElementById(id).addEventListener("keydown", e => {
         if (e.key === "Enter") authSubmit.click();
     })
@@ -2474,14 +2950,18 @@ authToggle.onclick = () => {
         authMode = "register";
         authTitle.textContent = "Регистрация";
         authSubmit.textContent = "Зарегистрироваться";
+        authEmail.style.display = "";
         authSwitch.innerHTML = 'Уже есть аккаунт? <a id="authToggle">Войти</a>';
     } else {
         authMode = "login";
         authTitle.textContent = "Вход";
         authSubmit.textContent = "Войти";
+        authEmail.style.display = "none";
         authSwitch.innerHTML = 'Нет аккаунта? <a id="authToggle">Зарегистрироваться</a>';
     }
     authError.textContent = "";
+    authStep2.style.display = "none";
+    authStep1.style.display = "";
     document.getElementById("authToggle").onclick = authToggle.onclick;
 };
 
@@ -2552,7 +3032,7 @@ const recTimerEl      = document.getElementById("recTimer");
 const recVideoPreview = document.getElementById("recVideoPreview");
 
 function updateVoiceBtn() {
-    voiceBtn.textContent = voiceMode === "video" ? "🎥" : "🎤";
+    setIcon(voiceBtn, voiceMode === "video" ? "video" : "mic");
     voiceBtn.title = voiceMode === "video"
         ? "Тап — аудио режим, зажать — видеосообщение"
         : "Тап — видео режим, зажать — аудиосообщение";
@@ -2694,13 +3174,21 @@ let ctxIsGroup = false;
 function showCtxMenu(x, y, name, isGroup) {
     ctxTarget = name;
     ctxIsGroup = !!isGroup;
-    const mw = 170, mh = 80;
-    ctxMenu.style.left = Math.min(x, window.innerWidth - mw - 8) + "px";
-    ctxMenu.style.top  = Math.min(y, window.innerHeight - mh - 8) + "px";
-    ctxMenu.style.display = "block";
     // Показываем нужные пункты
     document.getElementById("ctxDelete").style.display = isGroup ? "none" : "";
     document.getElementById("ctxLeaveGroup").style.display = isGroup ? "" : "none";
+    // show offscreen to measure
+    ctxMenu.style.visibility = "hidden";
+    ctxMenu.style.display = "block";
+    const rect = ctxMenu.getBoundingClientRect();
+    const mw = rect.width, mh = rect.height;
+    let left = Math.min(x, window.innerWidth - mw - 8);
+    let top = y;
+    if (top + mh + 8 > window.innerHeight) top = window.innerHeight - mh - 8;
+    if (top < 8) top = 8;
+    ctxMenu.style.left = left + "px";
+    ctxMenu.style.top  = top + "px";
+    ctxMenu.style.visibility = "";
 }
 function hideCtxMenu() { ctxMenu.style.display = "none"; ctxTarget = null; }
 document.addEventListener("click", hideCtxMenu);
@@ -2756,22 +3244,131 @@ function showMsgCtxMenu(x, y, msg) {
     const isMine = msg.from === myName;
     document.getElementById("msgCtxEdit").style.display = isMine ? "" : "none";
     document.getElementById("msgCtxDelete").style.display = isMine ? "" : "none";
-    const mw = 230, mh = 120;
-    msgCtxMenu.style.left = Math.min(x, window.innerWidth - mw - 8) + "px";
-    msgCtxMenu.style.top  = Math.min(y, window.innerHeight - mh - 8) + "px";
+    // show offscreen to measure
+    msgCtxMenu.style.visibility = "hidden";
     msgCtxMenu.style.display = "block";
+    const rect = msgCtxMenu.getBoundingClientRect();
+    const mw = rect.width, mh = rect.height;
+    let left = Math.min(x, window.innerWidth - mw - 8);
+    let top = y;
+    if (top + mh + 8 > window.innerHeight) top = window.innerHeight - mh - 8;
+    if (top < 8) top = 8;
+    msgCtxMenu.style.left = left + "px";
+    msgCtxMenu.style.top  = top + "px";
+    msgCtxMenu.style.visibility = "";
 }
-function hideMsgCtxMenu() { msgCtxMenu.style.display = "none"; msgCtxTarget = null; }
+function hideMsgCtxMenu() {
+    msgCtxMenu.style.display = "none"; msgCtxTarget = null;
+    const rf = document.getElementById("reactionFull");
+    if (rf) rf.style.display = "none";
+    const eb = document.getElementById("reactionExpandBtn");
+    if (eb) eb.classList.remove("open");
+}
 document.addEventListener("click", hideMsgCtxMenu);
 
-// Клик по эмодзи в пикере
-document.getElementById("reactionPicker").addEventListener("click", e => {
+// ── Emoji data ────────────────────────────────────────────────────────────
+const QUICK_EMOJIS = ["👍","❤️","😂","😮","😢","🔥","👎","🎉"];
+const ALL_EMOJIS = [
+    // Smileys
+    "😀","😃","😄","😁","😆","😅","🤣","😂","🙂","😊","😇","🥰","😍","🤩","😘","😗","😚","😙",
+    "🥲","😋","😛","😜","🤪","😝","🤑","🤗","🤭","🫢","🫣","🤫","🤔","🫡","🤐","🤨","😐","😑",
+    "😶","🫥","😏","😒","🙄","😬","🤥","😌","😔","😪","🤤","😴","😷","🤒","🤕","🤢","🤮","🥵",
+    "🥶","🥴","😵","🤯","🤠","🥳","🥸","😎","🤓","🧐","😕","🫤","😟","🙁","😮","😯","😲","😳",
+    "🥺","🥹","😦","😧","😨","😰","😥","😢","😭","😱","😖","😣","😞","😓","😩","😫","🥱","😤",
+    "😡","😠","🤬","😈","👿","💀","☠️","💩","🤡","👹","👺","👻","👽","👾","🤖",
+    // Gestures
+    "👋","🤚","🖐️","✋","🖖","🫱","🫲","🫳","🫴","👌","🤌","🤏","✌️","🤞","🫰","🤟","🤘","🤙",
+    "👈","👉","👆","🖕","👇","☝️","🫵","👍","👎","✊","👊","🤛","🤜","👏","🙌","🫶","👐","🤲",
+    "🤝","🙏","✍️","💪","🦾","🦿",
+    // Hearts & symbols
+    "❤️","🧡","💛","💚","💙","💜","🖤","🤍","🤎","💔","❤️‍🔥","❤️‍🩹","❣️","💕","💞","💓","💗","💖",
+    "💘","💝","💟","☮️","✝️","☪️","🕉️","☸️","✡️","🔯","🕎","☯️","☦️","🛐","⛎","♈","♉","♊",
+    "♋","♌","♍","♎","♏","♐","♑","♒","♓","🆔","⚛️",
+    // Animals
+    "🐶","🐱","🐭","🐹","🐰","🦊","🐻","🐼","🐻‍❄️","🐨","🐯","🦁","🐮","🐷","🐸","🐵","🙈","🙉",
+    "🙊","🐔","🐧","🐦","🐤","🦆","🦅","🦉","🦇","🐺","🐗","🐴","🦄","🐝","🪱","🐛","🦋","🐌",
+    "🐞","🐜","🪰","🪲","🪳","🦟","🦗","🕷️","🦂","🐢","🐍","🦎","🦖","🦕","🐙","🦑","🦐","🦞",
+    "🦀","🐡","🐠","🐟","🐬","🐳","🐋","🦈","🐊","🐅","🐆","🦓","🦍","🦧","🐘","🦛","🦏","🐪",
+    // Food
+    "🍎","🍐","🍊","🍋","🍌","🍉","🍇","🍓","🫐","🍈","🍒","🍑","🥭","🍍","🥥","🥝","🍅","🍆",
+    "🥑","🥦","🥬","🥒","🌶️","🫑","🌽","🥕","🫒","🧄","🧅","🥔","🍠","🫘","🥐","🥖","🍞","🥨",
+    "🧀","🥚","🍳","🧈","🥞","🧇","🥓","🥩","🍗","🍖","🌭","🍔","🍟","🍕","🫓","🥪","🥙","🧆",
+    "🌮","🌯","🫔","🥗","🥘","🫕","🥫","🍝","🍜","🍲","🍛","🍣","🍱","🥟","🦪","🍤","🍙","🍚",
+    "🍘","🍥","🥠","🥮","🍢","🍡","🍧","🍨","🍦","🥧","🧁","🍰","🎂","🍮","🍭","🍬","🍫","🍿",
+    "🍩","🍪","🌰","🥜","🍯","🥛","🍼","🫖","☕","🍵","🧃","🥤","🧋","🍶","🍺","🍻","🥂","🍷",
+    "🥃","🍸","🍹","🧉","🍾","🧊",
+    // Activities & objects
+    "⚽","🏀","🏈","⚾","🥎","🎾","🏐","🏉","🥏","🎱","🪀","🏓","🏸","🏒","🏑","🥍","🏏","🪃",
+    "🥅","⛳","🪁","🛝","🏹","🎣","🤿","🥊","🥋","🎽","🛹","🛼","🛷","⛸️","🥌","🎿","⛷️","🏂",
+    "🎯","🪀","🎮","🕹️","🎰","🎲","🧩","♟️","🎭","🎨","🎬","🎤","🎧","🎼","🎹","🥁","🪘","🎷",
+    "🎺","🪗","🎸","🪕","🎻","🎪","🎢","🎡","🎠",
+    // Travel
+    "🚗","🚕","🚙","🚌","🚎","🏎️","🚓","🚑","🚒","🚐","🛻","🚚","🚛","🚜","🏍️","🛵","🛺","🚲",
+    "🛴","🚏","🛣️","🛤️","⛽","🚨","🚥","🚦","🚧","⚓","🛟","⛵","🚤","🛳️","⛴️","🛥️","🚢","✈️",
+    "🛩️","🛫","🛬","🪂","💺","🚁","🚟","🚠","🚡","🛰️","🚀","🛸",
+    // Flags & misc
+    "🏁","🚩","🎌","🏴","🏳️","🏳️‍🌈","🏳️‍⚧️","🏴‍☠️",
+    "🔴","🟠","🟡","🟢","🔵","🟣","🟤","⚫","⚪","🔶","🔷","🔸","🔹",
+    "✅","❌","❓","❗","‼️","⁉️","💯","🔱","⭐","🌟","💫","✨","⚡","🔥","💥","🎵","🎶",
+    "🏆","🥇","🥈","🥉","🏅","🎖️","🎗️","🎁","🎀","🎊","🎉","🎈","🪄","🔮","🧿","🪬","💎"
+];
+
+// Populate quick reactions
+const reactionQuick = document.getElementById("reactionQuick");
+QUICK_EMOJIS.forEach(em => {
+    const b = document.createElement("button");
+    b.dataset.emoji = em;
+    b.textContent = em;
+    reactionQuick.appendChild(b);
+});
+
+// Populate full grid
+const reactionGrid = document.getElementById("reactionGrid");
+function populateGrid(filter) {
+    reactionGrid.innerHTML = "";
+    const list = filter ? ALL_EMOJIS.filter(e => e.includes(filter)) : ALL_EMOJIS;
+    list.forEach(em => {
+        const b = document.createElement("button");
+        b.dataset.emoji = em;
+        b.textContent = em;
+        reactionGrid.appendChild(b);
+    });
+}
+populateGrid();
+
+// Expand / collapse
+const reactionExpandBtn = document.getElementById("reactionExpandBtn");
+const reactionFull = document.getElementById("reactionFull");
+const reactionSearchInput = document.getElementById("reactionSearch");
+
+reactionExpandBtn.addEventListener("click", e => {
+    e.stopPropagation();
+    const open = reactionFull.style.display !== "none";
+    reactionFull.style.display = open ? "none" : "";
+    reactionExpandBtn.classList.toggle("open", !open);
+    if (!open) { reactionSearchInput.value = ""; populateGrid(); reactionSearchInput.focus(); }
+    // reposition menu after expand
+    const rect = msgCtxMenu.getBoundingClientRect();
+    if (rect.bottom > window.innerHeight - 8) {
+        msgCtxMenu.style.top = Math.max(8, window.innerHeight - rect.height - 8) + "px";
+    }
+});
+
+reactionSearchInput.addEventListener("input", () => {
+    populateGrid(reactionSearchInput.value.trim());
+});
+reactionSearchInput.addEventListener("click", e => e.stopPropagation());
+
+// Click on any emoji (quick or grid)
+function handleEmojiClick(e) {
     const btn = e.target.closest("button[data-emoji]");
     if (!btn || !msgCtxTarget) return;
     e.stopPropagation();
     toggleReaction(msgCtxTarget.id, btn.dataset.emoji);
     hideMsgCtxMenu();
-});
+}
+document.getElementById("reactionQuick").addEventListener("click", handleEmojiClick);
+reactionGrid.addEventListener("click", handleEmojiClick);
 
 const editBar     = document.getElementById("editBar");
 const editBarText = document.getElementById("editBarText");
@@ -3002,10 +3599,10 @@ function endActiveCall() {
     isVideoCall = false; micMuted = false; camOff = false;
     callMinimized = false; callStartTime = null; callWasConnected = false; callTarget = null;
     document.getElementById("vcallMicBtn").classList.remove("muted");
-    document.getElementById("vcallMicBtn").textContent = "🎤";
+    setIcon(document.getElementById("vcallMicBtn"), "mic");
     document.getElementById("vcallCamBtn").classList.remove("off");
-    document.getElementById("vcallCamBtn").textContent = "📷";
-    document.getElementById("callMicBtn").textContent = "🎤";
+    setIcon(document.getElementById("vcallCamBtn"), "cam");
+    setIcon(document.getElementById("callMicBtn"), "mic");
     videoCallOverlay.classList.remove("audio-mode");
 }
 
@@ -3361,10 +3958,10 @@ function toggleMic() {
     if (!localStream) return;
     micMuted = !micMuted;
     localStream.getAudioTracks().forEach(t => { t.enabled = !micMuted; });
-    const icon = micMuted ? "🔇" : "🎤";
+    const icon = micMuted ? "micOff" : "mic";
     document.getElementById("vcallMicBtn").classList.toggle("muted", micMuted);
-    document.getElementById("vcallMicBtn").textContent = icon;
-    document.getElementById("callMicBtn").textContent = icon;
+    setIcon(document.getElementById("vcallMicBtn"), icon);
+    setIcon(document.getElementById("callMicBtn"), icon);
 }
 document.getElementById("vcallMicBtn").onclick = toggleMic;
 document.getElementById("callMicBtn").onclick  = toggleMic;
@@ -3375,7 +3972,7 @@ document.getElementById("vcallCamBtn").onclick = () => {
     camOff = !camOff;
     localStream.getVideoTracks().forEach(t => { t.enabled = !camOff; });
     document.getElementById("vcallCamBtn").classList.toggle("off", camOff);
-    document.getElementById("vcallCamBtn").textContent = camOff ? "🚫" : "📷";
+    setIcon(document.getElementById("vcallCamBtn"), camOff ? "camOff" : "cam");
     localVideo.style.opacity = camOff ? "0.3" : "1";
     floatLocalVideo.style.opacity = camOff ? "0.3" : "1";
 };
@@ -3713,9 +4310,9 @@ function endGroupCall() {
     groupCallOverlay.style.display = "none";
     gcallGrid.innerHTML = "";
     document.getElementById("gcallTimer").textContent = "0:00";
-    document.getElementById("gcallMicBtn").textContent = "🎤";
+    setIcon(document.getElementById("gcallMicBtn"), "mic");
     document.getElementById("gcallMicBtn").classList.remove("muted");
-    document.getElementById("gcallCamBtn").textContent = "📷";
+    setIcon(document.getElementById("gcallCamBtn"), "cam");
     document.getElementById("gcallCamBtn").classList.remove("off");
     document.getElementById("gcallScreenBtn").classList.remove("screen-active");
 }
@@ -3731,9 +4328,9 @@ async function handleGroupSignal(data) {
                 if (!pendingGroupCall) {
                     pendingGroupCall = { groupId: data.groupId, from: data.from, withVideo: !!data.data.withVideo };
                     document.getElementById("incomingGroupName").textContent = group.name;
-                    const callType = data.data.withVideo ? "🎥 Видеозвонок" : "🎤 Аудиозвонок";
+                    const callType = data.data.withVideo ? "Видеозвонок" : "Аудиозвонок";
                     document.getElementById("incomingGroupCaller").textContent = data.from + " начал(а) " + callType.toLowerCase();
-                    document.getElementById("acceptGroupCall").textContent = data.data.withVideo ? "🎥 Присоединиться" : "🎤 Присоединиться";
+                    setButtonWithText(document.getElementById("acceptGroupCall"), data.data.withVideo ? "video" : "mic", "Присоединиться");
                     incomingGroupCall.style.display = "flex";
                     callSound.play().catch(() => {});
                 }
@@ -3847,7 +4444,7 @@ document.getElementById("gcallMicBtn").onclick = () => {
     gcallMicMuted = !gcallMicMuted;
     gcallStream.getAudioTracks().forEach(t => { t.enabled = !gcallMicMuted; });
     const btn = document.getElementById("gcallMicBtn");
-    btn.textContent = gcallMicMuted ? "🔇" : "🎤";
+    setIcon(btn, gcallMicMuted ? "micOff" : "mic");
     btn.classList.toggle("muted", gcallMicMuted);
 };
 
@@ -3856,7 +4453,7 @@ document.getElementById("gcallCamBtn").onclick = () => {
     gcallCamOff = !gcallCamOff;
     gcallStream.getVideoTracks().forEach(t => { t.enabled = !gcallCamOff; });
     const btn = document.getElementById("gcallCamBtn");
-    btn.textContent = gcallCamOff ? "🚫" : "📷";
+    setIcon(btn, gcallCamOff ? "camOff" : "cam");
     btn.classList.toggle("off", gcallCamOff);
     if (gcallCamOff) {
         gcallTileVideo(myName, null);
@@ -3941,12 +4538,16 @@ const groupMemberInput = document.getElementById("groupMemberInput");
 const groupMembersList = document.getElementById("groupMembersList");
 const groupModalError = document.getElementById("groupModalError");
 let groupModalMembers = []; // ники участников (без себя)
+let pendingGroupAvatar = null;
 
 function openGroupModal() {
     groupModalMembers = [];
+    pendingGroupAvatar = null;
     groupNameInput.value = "";
     groupMemberInput.value = "";
     groupModalError.textContent = "";
+    const p = document.getElementById("groupAvatarPreview");
+    if (p) { p.innerHTML = "👥"; }
     renderGroupMembers();
     groupModal.style.display = "flex";
     groupNameInput.focus();
@@ -3997,12 +4598,56 @@ groupModal.addEventListener("click", e => { if (e.target === groupModal) closeGr
 document.getElementById("groupAddMemberBtn").onclick = doAddGroupMember;
 groupMemberInput.addEventListener("keydown", e => { if (e.key === "Enter") doAddGroupMember(); });
 
+
+function setGroupAvatarPreview(dataUrl) {
+    const p = document.getElementById("groupAvatarPreview");
+    if (!p) return;
+    p.innerHTML = "";
+    if (!dataUrl) { p.textContent = "👥"; return; }
+    const img = document.createElement("img");
+    img.src = dataUrl;
+    p.appendChild(img);
+}
+
+function fileToSquareDataUrl(file, cb) {
+    const reader = new FileReader();
+    reader.onload = ev => {
+        const img = new Image();
+        img.onload = () => {
+            const canvas = document.createElement("canvas");
+            canvas.width = 256; canvas.height = 256;
+            const ctx = canvas.getContext("2d");
+            const side = Math.min(img.width, img.height);
+            const sx = (img.width - side) / 2, sy = (img.height - side) / 2;
+            ctx.drawImage(img, sx, sy, side, side, 0, 0, 256, 256);
+            cb(canvas.toDataURL("image/jpeg", 0.85));
+        };
+        img.src = ev.target.result;
+    };
+    reader.readAsDataURL(file);
+}
+
+document.getElementById("groupAvatarUploadBtn").onclick = () => document.getElementById("groupAvatarFile").click();
+document.getElementById("groupAvatarRemoveBtn").onclick = () => {
+    pendingGroupAvatar = null;
+    setGroupAvatarPreview(null);
+};
+document.getElementById("groupAvatarFile").onchange = e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    fileToSquareDataUrl(file, dataUrl => {
+        pendingGroupAvatar = dataUrl;
+        setGroupAvatarPreview(dataUrl);
+    });
+    e.target.value = "";
+};
+
 document.getElementById("groupCreateBtn").onclick = () => {
     const name = groupNameInput.value.trim();
     if (!name) { groupModalError.textContent = "Введите название группы"; return; }
     if (name.length > 64) { groupModalError.textContent = "Название слишком длинное"; return; }
     if (groupModalMembers.length < 1) { groupModalError.textContent = "Добавьте хотя бы одного участника"; return; }
-    socket.send(JSON.stringify({ type: "createGroup", name, members: groupModalMembers }));
+    socket.send(JSON.stringify({ type: "createGroup", name, members: groupModalMembers, avatar: pendingGroupAvatar }));
     closeGroupModal();
 };
 
@@ -4091,6 +4736,58 @@ function openAddMemberModal() {
     addMemberNickInput.focus();
 }
 function closeAddMemberModal() { addMemberModal.style.display = "none"; }
+
+const groupMembersViewModal = document.getElementById("groupMembersViewModal");
+const groupMembersViewList = document.getElementById("groupMembersViewList");
+const groupMembersViewTitle = document.getElementById("groupMembersViewTitle");
+
+function openGroupMembersModal(groupId = active) {
+    const gid = groupId;
+    const g = state.groups[gid];
+    if (!g) return;
+    groupMembersViewTitle.textContent = "Участники: " + g.name;
+    groupMembersViewList.innerHTML = "";
+    g.members.forEach(nick => {
+        const row = document.createElement("div");
+        row.className = "group-view-row";
+        const ava = document.createElement("div");
+        ava.className = "avatar";
+        renderAvatar(ava, nick, false);
+        const name = document.createElement("div");
+        name.className = "group-view-name";
+        name.textContent = nick;
+        const role = document.createElement("div");
+        role.className = "group-view-role";
+        role.textContent = (g.creator === nick) ? "создатель" : "участник";
+        row.append(ava, name, role);
+        row.onclick = () => { if (nick !== myName) openUserProfile(nick); };
+        groupMembersViewList.appendChild(row);
+    });
+    groupMembersViewModal.style.display = "flex";
+}
+
+function closeGroupMembersModal() { groupMembersViewModal.style.display = "none"; }
+
+document.getElementById("groupMembersBtn").onclick = () => openGroupMembersModal();
+document.getElementById("groupMembersViewCloseBtn").onclick = closeGroupMembersModal;
+groupMembersViewModal.addEventListener("click", e => { if (e.target === groupMembersViewModal) closeGroupMembersModal(); });
+
+document.getElementById("groupMembersAvatarUploadBtn").onclick = () => {
+    if (!active || !isGroupActive()) return;
+    document.getElementById("groupMembersAvatarFile").click();
+};
+document.getElementById("groupMembersAvatarFile").onchange = e => {
+    const file = e.target.files[0];
+    if (!file || !active || !isGroupActive()) return;
+    fileToSquareDataUrl(file, dataUrl => {
+        socket.send(JSON.stringify({ type: "setGroupAvatar", groupId: active, avatar: dataUrl }));
+    });
+    e.target.value = "";
+};
+document.getElementById("groupMembersAvatarRemoveBtn").onclick = () => {
+    if (!active || !isGroupActive()) return;
+    socket.send(JSON.stringify({ type: "setGroupAvatar", groupId: active, avatar: null }));
+};
 
 document.getElementById("addMemberBtn").onclick = openAddMemberModal;
 document.getElementById("addMemberCancelBtn").onclick = closeAddMemberModal;
