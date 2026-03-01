@@ -4,7 +4,7 @@ const http      = require('http');
 const fs        = require('fs');
 const path      = require('path');
 const crypto    = require('crypto');
-const webpush    = require('web-push');
+const webpush   = require('web-push');
 
 // ── VAPID (Web Push) ────────────────────────────────────────────────────────
 let vapidPublicKey  = process.env.VAPID_PUBLIC_KEY;
@@ -35,7 +35,7 @@ function saveJSON(name, data) {
 
 // Структуры данных в памяти (персистируются в JSON)
 let users    = loadJSON('users', {});    // { nick: { hash, salt } }
-let groups   = loadJSON('groups', {});   // { id: { id, name, members, creator, avatar? } }
+let groups   = loadJSON('groups', {});   // { id: { id, name, members, creator } }
 let queue    = loadJSON('queue', {});    // { nick: [msg, ...] }
 let pushSubs = loadJSON('pushSubs', {}); // { nick: [{ endpoint, keys... }, ...] }
 
@@ -149,22 +149,29 @@ wss.on('connection', ws => {
         let data;
         try { data = JSON.parse(raw); } catch { return; }
 
-        // ── register (step 1: send code) ─────────────────────────────────
+        // ── register ───────────────────────────────────────────────────────
         if (data.type === 'register') {
-            const nick  = (data.nick || '').trim();
-            const pwd   = data.password || '';
+            const nick = (data.nick || '').trim();
+            const pwd  = data.password || '';
             if (!/^[a-zA-Z0-9_]{1,32}$/.test(nick)) {
                 ws.send(JSON.stringify({ type: 'authResult', success: false, error: 'Ник: 1–32 символа, только a-z A-Z 0-9 _' })); return;
             }
             if (pwd.length < 6 || pwd.length > 128) {
                 ws.send(JSON.stringify({ type: 'authResult', success: false, error: 'Пароль: 6–128 символов' })); return;
             }
-            }
             if (users[nick]) {
                 ws.send(JSON.stringify({ type: 'authResult', success: false, error: 'Ник уже занят' })); return;
             }
+            const salt = crypto.randomBytes(32).toString('hex');
+            users[nick] = { hash: hashPassword(pwd, salt), salt };
+            saveJSON('users', users);
+            ws.authenticated = true; ws.name = nick; clients[nick] = ws;
+            broadcastOnline();
+            ws.send(JSON.stringify({ type: 'authResult', success: true, nick }));
+            return;
+        }
 
-        // ── login (step 1: verify password) ──────────
+        // ── login ──────────────────────────────────────────────────────────
         if (data.type === 'login') {
             const nick = (data.nick || '').trim();
             const pwd  = data.password || '';
@@ -172,7 +179,9 @@ wss.on('connection', ws => {
             if (!user || hashPassword(pwd, user.salt) !== user.hash) {
                 ws.send(JSON.stringify({ type: 'authResult', success: false, error: !user ? 'Неизвестный ник' : 'Неверный пароль' })); return;
             }
-
+            if (clients[nick] && clients[nick] !== ws) {
+                try { clients[nick].send(JSON.stringify({ type: 'kicked' })); clients[nick].close(); } catch {}
+            }
             ws.authenticated = true; ws.name = nick; clients[nick] = ws;
             broadcastOnline();
             ws.send(JSON.stringify({ type: 'authResult', success: true, nick }));
@@ -234,8 +243,7 @@ wss.on('connection', ws => {
             if (members.length < 2) return;
             for (const m of members) { if (!users[m]) return; }
             const id = 'g_' + Date.now().toString(36) + '_' + crypto.randomBytes(4).toString('hex');
-            const avatar = typeof data.avatar === 'string' && data.avatar.startsWith('data:image/') ? data.avatar : undefined;
-            const group = { id, name, members, creator: ws.name, avatar };
+            const group = { id, name, members, creator: ws.name };
             groups[id] = group;
             saveJSON('groups', groups);
             const notif = { type: 'groupCreated', group };
@@ -247,24 +255,6 @@ wss.on('connection', ws => {
         }
 
         // ── addGroupMember ─────────────────────────────────────────────────
-
-        // ── setGroupAvatar ────────────────────────────────────────────────
-        if (data.type === 'setGroupAvatar') {
-            const group = groups[data.groupId];
-            if (!group || !group.members.includes(ws.name)) return;
-            const avatar = (typeof data.avatar === 'string' && data.avatar.startsWith('data:image/')) ? data.avatar : null;
-            if (avatar && avatar.length > 2_000_000) return;
-            if (avatar) group.avatar = avatar;
-            else delete group.avatar;
-            saveJSON('groups', groups);
-            const notif = { type: 'groupUpdated', groupId: data.groupId, group };
-            for (const m of group.members) {
-                if (clients[m]) clients[m].send(JSON.stringify(notif));
-                else enqueue(m, notif);
-            }
-            return;
-        }
-
         if (data.type === 'addGroupMember') {
             const nick = (data.nick || '').trim();
             if (!nick || !users[nick]) { ws.send(JSON.stringify({ type: 'addMemberError', groupId: data.groupId, error: 'no_user' })); return; }
