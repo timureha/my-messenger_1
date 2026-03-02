@@ -30,7 +30,11 @@ function loadJSON(name, def) {
 }
 
 function saveJSON(name, data) {
-    fs.writeFileSync(dbPath(name), JSON.stringify(data), 'utf8');
+    try {
+        fs.writeFileSync(dbPath(name), JSON.stringify(data), 'utf8');
+    } catch (e) {
+        console.error('saveJSON(' + name + ') failed:', e.message);
+    }
 }
 
 // Структуры данных в памяти (персистируются в JSON)
@@ -139,15 +143,30 @@ function broadcastOnline() {
     const online = {};
     for (const n in clients) online[n] = true;
     const msg = JSON.stringify({ type: 'onlineList', users: online, lastSeen });
-    for (const n in clients) clients[n].send(msg);
+    for (const n in clients) {
+        try { clients[n].send(msg); } catch {}
+    }
 }
 
+// ── Heartbeat — не даём Render/прокси убить idle-соединение ──────────────
+const HEARTBEAT_INTERVAL = 25000;
+setInterval(() => {
+    wss.clients.forEach(ws => {
+        if (ws.isAlive === false) return ws.terminate();
+        ws.isAlive = false;
+        ws.ping();
+    });
+}, HEARTBEAT_INTERVAL);
+
 wss.on('connection', ws => {
+    ws.isAlive = true;
+    ws.on('pong', () => { ws.isAlive = true; });
     ws.authenticated = false;
 
     ws.on('message', async raw => {
         let data;
         try { data = JSON.parse(raw); } catch { return; }
+        try {
 
         // ── register ───────────────────────────────────────────────────────
         if (data.type === 'register') {
@@ -291,6 +310,9 @@ wss.on('connection', ws => {
             }
             return;
         }
+        } catch (err) {
+            console.error('Message handler error:', err);
+        }
     });
 
     ws.on('close', () => {
@@ -304,4 +326,5 @@ wss.on('connection', ws => {
 
 // ── Start ────────────────────────────────────────────────────────────────────
 const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => console.log('Server on port ' + PORT));
+const HOST = process.env.HOST || '0.0.0.0';
+server.listen(PORT, HOST, () => console.log('Server on ' + HOST + ':' + PORT));
